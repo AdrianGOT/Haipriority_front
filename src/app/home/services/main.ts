@@ -1,8 +1,9 @@
 import api from "../../../lib/customInterceptor";
+import { ItemList } from "../interfaces/sideNav";
 
 interface MenuListResponse{
     ok: boolean,
-    menuList: string[]
+    menuList: ItemList[]
 }
 
 export const getMainInfo = async (): Promise<MenuListResponse> => {

@@ -9,12 +9,12 @@ const SideNav = () => {
     const { menuList, setMenuList } = useMainInfo(location.pathname);
  
     const handleListItemClick = ( url: string ) => {
-        
-        setMenuList(preList => preList.map(item => {
-            item.selected = (item.url === url);
+        const newMenuItems = menuList.map(item => {
+            item.selected = url === item.path  
             return item;
-        }))
+        })
 
+        setMenuList(newMenuItems);
         navigate(`/${url}`);
     };
 
@@ -37,11 +37,11 @@ const SideNav = () => {
                 {
                     menuList.map(item => (
                         <ListItemButton
-                        key={item.url}
+                        key={item.path}
                         selected={item.selected}
-                        onClick={() => handleListItemClick( item.url)}
+                        onClick={() => handleListItemClick( item.path)}
                         >
-                            <ListItemText primary={item.textToShow} />
+                            <ListItemText primary={item.text} />
                         </ListItemButton> 
                     ))
                 }

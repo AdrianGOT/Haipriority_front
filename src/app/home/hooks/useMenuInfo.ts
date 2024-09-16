@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { getMainInfo } from "../services/main";
+import { ItemList } from "../interfaces/sideNav";
 
 
 const TEXT_BY_URL = {
@@ -9,35 +10,22 @@ const TEXT_BY_URL = {
     "clients": "Clientes",
 }
 
-
-interface MenuItem { 
-    url        : string;
-    textToShow : string; 
-    selected   : boolean;
-
-}
-
 export const useMainInfo = (path: string) => {
-    const [ menuList, setMenuList ] = useState<MenuItem[]>([]);
+    const [ menuList, setMenuList ] = useState<ItemList[]>([]);
     
     useEffect(() => {
         
         const getMenuInfo = async() => {
             const data = await getMainInfo();
-            const dataMapped: MenuItem[] = data.menuList.map( item => {         
-                const p: MenuItem = {
-                    url: item,
-                    textToShow:TEXT_BY_URL[item as keyof typeof TEXT_BY_URL],
-                    selected: path.includes(item)
-                }
-
-                return p;
+            const dataMapper = data.menuList.map(item => {
+                item.selected = path.includes(item.path);  
+                return item;
             })
-            setMenuList(dataMapped);
+            setMenuList(dataMapper);
         }
 
         getMenuInfo();
-    }, [path]) 
+    }, []) 
 
     return {
         menuList,
