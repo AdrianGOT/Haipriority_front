@@ -2,14 +2,6 @@ import { useEffect, useState } from "react"
 import { getMainInfo } from "../services/main";
 import { ItemList } from "../interfaces/sideNav";
 
-
-const TEXT_BY_URL = {
-    "credit-card": "Tarjetas de credito",
-    "debit-card": "Tarjetas de debito",
-    "loan": "Prestamos",
-    "clients": "Clientes",
-}
-
 export const useMainInfo = (path: string) => {
     const [ menuList, setMenuList ] = useState<ItemList[]>([]);
     
