@@ -1,14 +1,12 @@
-import { useState } from "react"
-import { Card } from "../interfaces/card"
-import { getCards } from "../services/card"
+import { useContext } from "react";
+import { CreditCardContext } from "../../../../../context/creditCard";
 
 export const useCards = () => {
-    const [cards, setCards] = useState<Card[]>([])
-    
-    const getCardList = async() => {
-        const cards = await getCards();
-        setCards( cards.cards );
-    }
+    const { 
+        cards, 
+        getCardList 
+    } = useContext(CreditCardContext);
+
 
     return {
         cards,

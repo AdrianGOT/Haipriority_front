@@ -3,12 +3,15 @@ import { Card } from "../app/home/pages/creditCard/interfaces/card";
 import { CreditCard, CreditCardInit } from "../app/home/pages/creditCard/interfaces/creditCard";
 import { createCC, getCreditCards } from "../app/home/pages/creditCard/services/creditCard";
 import toast from "react-hot-toast";
+import { getCards } from "../app/home/pages/creditCard/services/card";
 
 interface CardsContext {
-  cards       : Card[],
-  creditCards : CreditCard[],
-  createCreditCard: (cCardInfo: CreditCardInit) => void
-  getClientCredictCards: () => void
+  cards                  : Card[],
+  creditCards            : CreditCard[],
+  getCardList            : () => void
+  createCreditCard       : (cCardInfo: CreditCardInit) => void
+  getClientCredictCards  : () => void,
+
 }
 
 const initialValues: CardsContext = {
@@ -16,19 +19,15 @@ const initialValues: CardsContext = {
     creditCards: [],
     createCreditCard: (cCardInfo: CreditCardInit) => {},
     getClientCredictCards: () => {},
+    getCardList: () => {}
 
 }
-
-
 
 export const CreditCardContext = createContext<CardsContext>(initialValues)
 
 export function CreditcardsProvider({children}: React.PropsWithChildren){
     const [ cards, setCards] = useState<Card[]>([]);
     const [ creditCards, setCreditCards] = useState<CreditCard[]>([]);
-    
-    console.log(creditCards);
-    
 
     const createNewCreditCard = async (cardInfo: CreditCardInit) => {
         const creditCard = await createCC(cardInfo);    
@@ -55,12 +54,18 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
         setCreditCards(creditCards.cards);
     } 
 
+    const getCardList = async() => {
+        const cards = await getCards();
+        setCards( cards.cards );
+    }
+
     return (
         <CreditCardContext.Provider value={{
             cards,
             creditCards,
             createCreditCard,
-            getClientCredictCards
+            getClientCredictCards,
+            getCardList
         }}>
             { children }
         </CreditCardContext.Provider>
