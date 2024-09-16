@@ -21,3 +21,47 @@
     padding: .5rem;
     grid-area: modules;
 }
+
+/* ======= Card styles =======*/
+.cardList-wrapper{
+    display: grid;
+    
+    justify-items: space-around; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+
+    width: 80%;
+}
+
+
+.form-create{
+    padding: 1rem;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: .8rem;
+    grid-template-areas:"cardName cardName"
+                        "cvc current_amount "  
+                        "expirationDate expirationDate"
+                        "courtDate paymentDate "
+}
+
+.cvc{
+    grid-area: cvc;
+}
+.current_amount{
+    grid-area: current_amount;
+}
+.cardName{
+    grid-area:cardName ;
+}
+.expirationDate{
+    grid-area: expirationDate;
+}
+.courtDate{
+    grid-area: courtDate;
+}
+.paymentDate{
+    grid-area: paymentDate;
+}

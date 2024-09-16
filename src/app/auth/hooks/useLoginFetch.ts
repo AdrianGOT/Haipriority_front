@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { ClientLogin } from "../../../interfaces/client.interfaces";
 import { setInfo } from "../../helpers/setSessionInfo";
 import { login } from "../services/auth";
+import { useClient } from "../../hooks/useClient";
 
 
 
 export const useLoginFetch = (data: ClientLogin | null) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [ finishMsg, setFinishMsg ] = useState<string>("");
+    const { setClient } = useClient();
 
     
     useEffect(()=> {
@@ -17,12 +19,15 @@ export const useLoginFetch = (data: ClientLogin | null) => {
             setLoading(true);
 
             try {
-                
+        
                 const client = await login(data);
-                // setInfo(client); // TODO Es para asignar el valor a donde se haya que asignar, posiblemente a un estado global.
-                setLoading(false)
-                setFinishMsg("Se ha logeado con exito");
-
+                
+                if(client.ok){
+                    setLoading(false)
+                    setFinishMsg("Se ha logeado con exito");
+                    setClient(client.client);
+                }
+                
                 
             } catch (error) {
                 console.log(error);

@@ -1,13 +1,20 @@
 
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { ToolBar } from '../shared/ToolBar';
 import "./main.css"
 import { Outlet } from 'react-router-dom';
+import { useClient } from '../hooks/useClient';
 
 const SideNav = lazy(()=> import('../shared/SideNav') )
 
 const MainPage = () => {
-    
+    const {client, getClientInfoByToken} = useClient();
+
+    useEffect(() => {
+        if(client && client.id === 0) getClientInfoByToken()
+    }, [])
+
+
     return (
 
         <section className='container'>

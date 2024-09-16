@@ -84,13 +84,14 @@ class CustomApi {
             const response = await fetch(url, options);
             const data = await response.json();
 
-            if(response.status === 401){
+            if(response.status === 401 && localStorage.getItem("token")){
                 localStorage.removeItem("token");
-                window.location.assign('/')
+                window.location.replace('/')
             }
             
             if( data && "token" in data ){
                 const {token} = data;
+                delete data.token
                 localStorage.setItem('token', token);
             }
             

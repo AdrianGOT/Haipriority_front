@@ -13,17 +13,14 @@ const Login = () => {
     const { loading, finishMsg } = useLoginFetch(data);
     const navigate = useNavigate(); 
 
-
     useEffect(()=> {
         if(!finishMsg) return;
-        
         toast.success(finishMsg);
         navigate("/");
 
     },[finishMsg])
     
     const submit =  handleSubmit(info => {
-        console.log(info);
         setData(info as unknown as ClientLogin);
     })
 
