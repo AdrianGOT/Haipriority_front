@@ -39,19 +39,15 @@
 
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     gap: .8rem;
     grid-template-areas:"cardName cardName"
-                        "cvc current_amount "  
-                        "expirationDate expirationDate"
+                        "cvc expirationDate "
                         "courtDate paymentDate "
 }
 
 .cvc{
     grid-area: cvc;
-}
-.current_amount{
-    grid-area: current_amount;
 }
 .cardName{
     grid-area:cardName ;

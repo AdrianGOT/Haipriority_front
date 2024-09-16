@@ -12,8 +12,33 @@ a{
     text-decoration: none;
 }
 
-
 #root{
     height: 100%;
+}
+
+/* ====== Formularios */
+.form{
+    display: flex;
+    flex-direction: column;   
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.form > div{
+    position: relative;
+    height: calc(40px + 0.9rem);
+    width: 100%;
+}
+
+.form .error-text{
+    color: red;
+    font-size: 0.7rem;
+    display: block;
+    width: 100%;
+    text-align: left;
+
+    position: absolute;
+    bottom: 0;
+    animation: showInputError .2s ease-in;
 }
 

@@ -2,6 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import { useForm } from "react-hook-form";
 import { Card } from "../pages/creditCard/interfaces/card";
 import { useClient } from "../../hooks/useClient";
+import { useEffect } from "react";
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -17,80 +18,64 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
         register, 
         handleSubmit, 
         formState: {errors},
-        setValue
+        setValue,
+        reset
     } = useForm();
 
-    setValue("cardName", client.name);
-    setValue("current_amount", 0);
+    useEffect(()=> {
+        if(!open) return;
+        setTimeout(() => {
+            const firstLetter =  client.name.charAt(0);
+            const restOfName = client.name.slice(1,client.name.length);
+            setValue("cardName", `${firstLetter.toUpperCase()}${restOfName}`);
+            setValue("expirationDate", generateExpDate()  )
+
+        })
+        
+    }, [open])
+    
+    const generateExpDate = () => {
+        const currentDate = new Date();
+        const expDate = new Date( currentDate.getFullYear() +3,  currentDate.getMonth() + 1, currentDate.getDay() )
+        const year = expDate.getFullYear();
+        const month = expDate.getUTCMonth() < 10? `0${expDate.getUTCMonth()}`: expDate.getUTCMonth
+        const day = expDate.getDate() < 10? `0${expDate.getDate()}`: expDate.getDate()
+
+        return `${year}-${month}-${day}`
+    }   
+
+
     const handleClose = () => {
-        onClose(card)
+        reset();
+        onClose(null)
     }
 
     
     const sendData = handleSubmit(info => {
-
+        onClose(info);
+        
     }) 
 
+    const validateRangeDate = (value: number): boolean | string => {
+        if(value < 1 || value > 31) return "El valor debe estar entre el 1 y 31 de cada mes";
+        return true;
+    }
 
 
     return (
          <Dialog onClose={handleClose} open={open}>
             <DialogTitle textAlign={"center"}>{"Asignación de tarjeta de credito"}</DialogTitle>
             <DialogContent>
-            <form onSubmit={sendData}  className="form-create">
-                      <div className="cvc">
-                            <TextField   
-                                        {...register("cvc",{
-                                            required: { 
-                                                value: true, 
-                                                message: "Este valor es requerido"
-                                            }
-                                        })}
-                                        error={errors.cvc? true : false}
-                                        label="CVC" 
-                                        variant="outlined" 
-                                        focused
-                                        sx={{ width: "100%" }}
-                                        size="small"/>
-                            { 
-                                errors["email"] && (
-                                    <span className="error-text"> 
-                                        { errors["email"].message as string } 
-                                    </span>
-                                ) 
-                            }
-                        
-                        </div>
-                        <div className="current_amount">
-                            <TextField   
-                                        {...register("current_amount",{
-                                            required: { 
-                                                value: true, 
-                                                message: "Este valor es requerido"
-                                            }, disabled: true
-                                        })}
-                                        error={errors["current_amount"]? true : false}
-                                        label="Cantidad actual" 
-                                        variant="outlined" 
-                                        focused
-                                        sx={{ width: "100%" }}
-                                        size="small"/>
-                            { 
-                                errors["current_amount"] && (
-                                    <span className="error-text"> 
-                                        { errors["current_amount"].message as string } 
-                                    </span>
-                                ) 
-                            }
-                            
-                        </div>
+            <form onSubmit={sendData}  className="form-create form">
                         <div className="cardName">
                             <TextField   
                                         {...register("cardName",{
-                                            required: { 
+                                            required: {
                                                 value: true, 
                                                 message: "Este valor es requerido"
-                                            }, disabled: true
+                                            }, 
+                                            disabled: true,
+                                            value: client.name
                                         })}
                                         error={errors["cardName"]? true : false}
                                         label="Nombre en la tarjeta" 
@@ -107,13 +92,46 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                             }
                             
                         </div>
+                        <div className="cvc">
+                            <TextField   
+                                        {...register("cvc",{
+                                            required: { 
+                                                value: true, 
+                                                message: "Este valor es requerido"
+                                            }, 
+                                            maxLength: {
+                                                value: 3,
+                                                message: "El valor no puede tener más de 3 caracateres"
+                                            },
+                                            minLength: {
+                                                value: 3,
+                                                message: "El valor no puede tener menos de 3 caracateres"
+                                            }
+                                        })}
+                                        error={errors.cvc? true : false}
+                                        label="CVC" 
+                                        variant="outlined" 
+                                        focused
+                                        type="number"
+                                        sx={{ width: "100%" }}
+                                        size="small"/>
+                            { 
+                                errors["cvc"] && (
+                                    <span className="error-text"> 
+                                        { errors["cvc"].message as string } 
+                                    </span>
+                                ) 
+                            }
+                        
+                        </div>
+                     
                         <div className="expirationDate">
                             <TextField   
                                         {...register("expirationDate",{
                                             required: { 
                                                 value: true, 
                                                 message: "Este valor es requerido"
-                                            }
+                                            }, disabled: true
                                         })}
                                         error={errors.expirationDate? true : false}
                                         label="Fecha de expiración" 
@@ -136,12 +154,14 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                                             required: { 
                                                 value: true, 
                                                 message: "Este valor es requerido"
-                                            }
+                                            },
+                                            validate : (value: number)=> validateRangeDate(value)
                                         })}
                                         error={errors.courtDate? true : false}
-                                        label="Día de corte" 
+                                        label="Día de corte (día del mes)" 
                                         variant="outlined" 
                                         focused
+                                        type="number"
                                         sx={{ width: "100%" }}
                                         size="small"/>
                             { 
@@ -158,13 +178,15 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                                         {...register("paymentDate",{
                                             required: { 
                                                 value: true, 
-                                                message: "Este valor es requerido"
-                                            }
+                                                message: "Este valor es requerido",
+                                            },
+                                            validate : (value: number)=> validateRangeDate(value)
                                         })}
                                         error={errors.paymentDate? true : false}
-                                        label="Fecha de pago" 
+                                        label="Fecha de pago (día del mes)" 
                                         variant="outlined" 
                                         focused
+                                        type="number"
                                         sx={{ width: "100%" }}
                                         size="small"/>
                             { 
@@ -172,7 +194,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                                     <span className="error-text"> 
                                         { errors["paymentDate"].message as string } 
                                     </span>
-                                ) 
+                                )
                             }
                             
                         </div>
@@ -180,7 +202,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
             </DialogContent>
             <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
-            <Button onClick={handleClose}>Guardar</Button>
+            <Button onClick={sendData}>Guardar</Button>
             </DialogActions>
         </Dialog>
     )

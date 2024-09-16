@@ -4,6 +4,9 @@ import { VisaIcon } from "../../../components/icons/VisaIcon";
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon";
 import { CreationCardDialog } from "../../../components/CreationCardDialog";
 import { useState } from "react";
+import { CreatingCard, CreditCardInit } from "../interfaces/creditCard";
+import { useCreditCard } from "../hooks/useCreditCard";
+
 
 interface Prop{
     info: CardInit
@@ -11,6 +14,8 @@ interface Prop{
 
 const IndividualCard = ({info}: Prop) => {
     const [open, setOpen] = useState<boolean>(false);
+    const { createCreditCard } = useCreditCard();
+
     const priceFormated = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -20,12 +25,27 @@ const IndividualCard = ({info}: Prop) => {
         setOpen(!open)
       }
 
-      const handleCloseDialog = () => {
-        console.log("se ha cerrado el dialog");
-        setOpen(!open);
+      const handleCloseDialog = async (value:CreatingCard) => {
+        if(value) {
         
+            const creditCardToCreate: CreditCardInit = {
+                cardId: info.id,
+                cvc: Number(value.cvc),
+                cardName: value.cardName,
+                courtDate: Number(value.courtDate),
+                paymentDate: Number(value.paymentDate),
+                expirationDate: value.expirationDate
+            }
+            console.log(value, creditCardToCreate);
+            
+            await createCreditCard(creditCardToCreate);
+        }
+
+        setOpen(!open);
       }
 
+
+     
     return (
         <>
         
@@ -51,6 +71,7 @@ const IndividualCard = ({info}: Prop) => {
                 </CardActionArea>
             </Card>
         </Tooltip>
+
         <CreationCardDialog onClose={handleCloseDialog} open={open} card={info}/>
         </>
     )

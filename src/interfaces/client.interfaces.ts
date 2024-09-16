@@ -2,9 +2,10 @@ export interface InitClient {
     id:          number;
     name:        string;
     email:       string;
-    roles:       string;
+    roles:       ROLES[];
     password?:   string; 
     createdAt?:   Date;
+    state?:      boolean;
     phoneNumber: string;
 }
 
@@ -27,4 +28,9 @@ export interface LoginResponse {
     ok     : boolean;
     token  : string;
     client : InitClient;
+}
+
+export enum ROLES {
+    user = "USER",
+    admin = "ADMIN",
 }

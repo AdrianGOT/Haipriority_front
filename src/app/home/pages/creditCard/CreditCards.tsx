@@ -6,27 +6,45 @@ import { CardList } from "../../components/CardList";
 import getIndividualCreditCard from "./components/IndividualCreditCard";
 import getIndividualCard from "./components/IndividualCard";
 import AddIcon from '@mui/icons-material/Add';
+import { useCards } from "./hooks/useCards";
+import { useClient } from "../../../hooks/useClient";
+import { ROLES } from "../../../../interfaces/client.interfaces";
+import { CreditcardsProvider } from "../../../../context/creditCard";
 
 type TabTypes = "creditCard" | "card";
 
-const CreditCard = () => {
-    const {cardList} = useCreditCard();
-    const [pageSelected, setPageSelected] = useState<TabTypes>("creditCard")
+const CreditCards = () => {
+    const { creditCards, getClientCredictCards } = useCreditCard();
+    const { cards, getCardList } = useCards();
+    const [ pageSelected, setPageSelected ] = useState<TabTypes>("creditCard");
+    const { client } = useClient();
+
+    console.log(creditCards);
     
+
     useEffect(()=> {
-        const creditCards = cardList?.creditCards; 
-        const page = creditCards?.length > 0? "creditCard" : "card";
+        setTimeout(async () => {
+            await Promise.all([
+                getClientCredictCards() , getCardList()
+            ])
+        })
+        console.log("se paso po aca");
+        
+    }, [])
+
+    useEffect(() => {
+        const page = creditCards.length > 0? "creditCard" : "card";
         setPageSelected(page);
+    },[creditCards])
 
-    }, [cardList])
+    const showAddCardButton = client.roles.some(role => ROLES.admin === role);
 
-    // TODO aqui se debe obtener el estado global del usuario para saber sus roles y poder indicar si se muestra o no botones en el lado de card
     const handleChange = (event: React.SyntheticEvent, page: TabTypes) => {
         setPageSelected(page)
     }
     
     return (
-        <>
+        <CreditcardsProvider>
             <TabContext value={pageSelected}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList 
@@ -44,7 +62,7 @@ const CreditCard = () => {
                 }}>
                     
                     <CardList 
-                        cards={cardList.creditCards} 
+                        cards={creditCards} 
                         fComponent={getIndividualCreditCard} />
 
                 </TabPanel>
@@ -58,27 +76,31 @@ const CreditCard = () => {
                     </Box>
 
                     <CardList 
-                        cards={cardList.cards} 
+                        cards={cards} 
                         fComponent={getIndividualCard} />
 
-                        <Button 
-                            variant="outlined" 
-                            size="medium" 
-                            startIcon={<AddIcon />}
-                            sx={{
-                                width: '80%', 
-                                textAlign: 'center',
-                                marginTop: '2rem'
-                                
-                            }}>
-                                Agregar tarjeta modelo
-                        </Button>
+                        {
+                            showAddCardButton && (
+                                <Button 
+                                    variant="outlined" 
+                                    size="medium" 
+                                    startIcon={<AddIcon />}
+                                    sx={{
+                                        width: '80%', 
+                                        textAlign: 'center',
+                                        marginTop: '2rem'
+                                        
+                                    }}>
+                                        Agregar tarjeta modelo
+                                </Button>
+                            )
+                        }
 
                 </TabPanel>
             </TabContext>
-        </>
+        </CreditcardsProvider>
 
     )
 }
 
-export default CreditCard;
+export default CreditCards;

@@ -10,12 +10,15 @@ interface ClientContext {
 }
 
 const clientDefault = {
+    createdAt: new Date(),
+    email: "",
     id: 0,
     name: "",
-    email: "",
-    roles: "",
-    phoneNumber: ""
+    phoneNumber: "",
+    state: false,
+    roles: []
 }
+
 
 const initialValues: ClientContext = {
     client: clientDefault,
