@@ -1,5 +1,9 @@
+import { Card } from "./card";
+
 export interface CreditCard extends CreditCardInit{
-    id : number
+    id     : number,
+    card   : Card,
+    number : string
 }
 
 export interface CreditCardInit extends CreatingCard{
@@ -12,5 +16,6 @@ export interface CreatingCard {
     courtDate      : number,
     paymentDate    : number,
     expirationDate : Date,
+    current_amount : number,
 
 }

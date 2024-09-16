@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Card } from "../pages/creditCard/interfaces/card";
 import { useClient } from "../../hooks/useClient";
 import { useEffect } from "react";
+import { generateDateToString } from "../../helpers/dateHelper";
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -37,13 +38,8 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
     const generateExpDate = () => {
         const currentDate = new Date();
         const expDate = new Date( currentDate.getFullYear() +3,  currentDate.getMonth() + 1, currentDate.getDay() )
-        const year = expDate.getFullYear();
-        const month = expDate.getUTCMonth() < 10? `0${expDate.getUTCMonth()}`: expDate.getUTCMonth
-        const day = expDate.getDate() < 10? `0${expDate.getDate()}`: expDate.getDate()
-
-        return `${year}-${month}-${day}`
-    }   
-
+        return generateDateToString(expDate);
+    }
 
     const handleClose = () => {
         reset();

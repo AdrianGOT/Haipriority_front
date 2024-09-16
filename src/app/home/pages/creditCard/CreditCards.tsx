@@ -11,6 +11,8 @@ import { useClient } from "../../../hooks/useClient";
 import { ROLES } from "../../../../interfaces/client.interfaces";
 import { CreditcardsProvider } from "../../../../context/creditCard";
 
+import "./creditCard.css";
+
 type TabTypes = "creditCard" | "card";
 
 const CreditCards = () => {

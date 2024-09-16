@@ -34,7 +34,9 @@ const IndividualCard = ({info}: Prop) => {
                 cardName: value.cardName,
                 courtDate: Number(value.courtDate),
                 paymentDate: Number(value.paymentDate),
-                expirationDate: value.expirationDate
+                expirationDate: value.expirationDate,
+                current_amount: 0
+
             }
             console.log(value, creditCardToCreate);
             
