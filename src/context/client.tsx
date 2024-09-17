@@ -7,6 +7,7 @@ interface ClientContext {
     client: InitClient,
     setClient: (client: InitClient) => void
     getClientInfoByToken: () => void
+    logout: () => void
 }
 
 const clientDefault = {
@@ -23,7 +24,8 @@ const clientDefault = {
 const initialValues: ClientContext = {
     client: clientDefault,
     setClient: (client: InitClient) => {},
-    getClientInfoByToken: async() => {}
+    getClientInfoByToken: async() => {},
+    logout: () => {}
 }
 
 export const ClientContext = createContext<ClientContext>(initialValues);
@@ -40,10 +42,15 @@ export function ClientProvider({children}: React.PropsWithChildren){
        
     }
 
+    const logout = () => {
+        setClient(clientDefault); 
+    }
+
     return (
         <ClientContext.Provider value={{
             getClientInfoByToken,
             setClient,
+            logout,
             client,
         }}>    
             {children}

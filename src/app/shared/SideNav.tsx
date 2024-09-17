@@ -2,8 +2,10 @@ import { Box, Button, List, ListItemButton, ListItemText } from "@mui/material";
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { useMainInfo } from "../home/hooks/useMenuInfo";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useClient } from "../hooks/useClient";
 
 const SideNav = () => {
+    const { logout } = useClient();
     const navigate = useNavigate();
     const location = useLocation();
     const { menuList, setMenuList } = useMainInfo(location.pathname);
@@ -17,6 +19,12 @@ const SideNav = () => {
         setMenuList(newMenuItems);
         navigate(`/${url}`);
     };
+
+    const handleLogout = () => {
+        logout();
+        localStorage.removeItem("token");
+        window.location.replace('/auth/login');
+    }
 
     return (
 
@@ -51,6 +59,7 @@ const SideNav = () => {
                 sx={{width: '80%', marginBottom:'.5rem'}}
                 component="label"
                 role={undefined}
+                onClick={handleLogout}
                 startIcon={<PowerSettingsNewIcon />}
               >
                 Cerrar sesión 

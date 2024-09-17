@@ -86,7 +86,7 @@ class CustomApi {
 
             if(response.status === 401 && localStorage.getItem("token")){
                 localStorage.removeItem("token");
-                window.location.replace('/')
+                window.location.replace('/');
             }
             
             if( data && "token" in data ){

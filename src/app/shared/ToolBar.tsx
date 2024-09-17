@@ -5,7 +5,7 @@ export const ToolBar = () => {
     const { client } = useClient();
 
     const initials = client?.name.split(" ")
-                        .reduce((pr, curr) =>  curr.charAt(0) + pr ,"")
+                        .reduce((pr, curr) => pr + curr.charAt(0) ,"")
                         .slice(0, 3)
     
     return (
@@ -14,7 +14,7 @@ export const ToolBar = () => {
             justifyContent: 'space-between', 
             padding: '0.8rem  2rem',  
             backgroundColor: 'red'}}>
-            <h2>My Bank App</h2>
+            <h2>Bank App</h2>
             <Avatar>{ initials }</Avatar>
         </Box>
     )

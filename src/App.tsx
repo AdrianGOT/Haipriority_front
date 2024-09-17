@@ -2,10 +2,6 @@
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 import { AuthLayout } from './app/auth/Layout';
 
-// import { Login } from './app/auth/pages/Login';
-// import { Register } from './app/auth/pages/Register';
-
-
 import { ProtectedRoute } from './ProptectedRoute';
 
 import { Toaster } from 'react-hot-toast';

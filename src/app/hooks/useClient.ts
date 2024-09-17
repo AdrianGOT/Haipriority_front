@@ -3,6 +3,7 @@ import { ClientContext } from "../../context/client"
 
 export const useClient = () => {
     const {
+        logout,
         client, 
         setClient, 
         getClientInfoByToken
@@ -10,6 +11,7 @@ export const useClient = () => {
     
     return {
         client, 
+        logout,
         setClient,
         getClientInfoByToken,
     }
