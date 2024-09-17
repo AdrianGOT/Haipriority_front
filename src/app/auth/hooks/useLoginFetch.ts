@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { ClientLogin } from "../../../interfaces/client.interfaces";
-import { setInfo } from "../../helpers/setSessionInfo";
 import { login } from "../services/auth";
 import { useClient } from "../../hooks/useClient";
-
-
 
 export const useLoginFetch = (data: ClientLogin | null) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -23,9 +20,9 @@ export const useLoginFetch = (data: ClientLogin | null) => {
                 const client = await login(data);
                 
                 if(client.ok){
-                    setLoading(false)
                     setFinishMsg("Se ha logeado con exito");
                     setClient(client.client);
+                    setLoading(false)
                 }
                 
                 

@@ -9,7 +9,7 @@ const SideNav = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { menuList, setMenuList } = useMainInfo(location.pathname);
- 
+    
     const handleListItemClick = ( url: string ) => {
         const newMenuItems = menuList.map(item => {
             item.selected = url === item.path  

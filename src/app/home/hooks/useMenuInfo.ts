@@ -6,7 +6,8 @@ export const useMainInfo = (path: string) => {
     const [ menuList, setMenuList ] = useState<ItemList[]>([]);
     
     useEffect(() => {
-        
+        if(menuList.length > 0) return;
+
         const getMenuInfo = async() => {
             const data = await getMainInfo();
             const dataMapper = data.menuList.map(item => {
@@ -15,9 +16,8 @@ export const useMainInfo = (path: string) => {
             })
             setMenuList(dataMapper);
         }
-
-        getMenuInfo();
-    }, []) 
+        getMenuInfo()
+    }, [path]) 
 
     return {
         menuList,

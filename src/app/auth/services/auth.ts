@@ -10,6 +10,9 @@ export const login = async ( clientInfo: ClientLogin ) => {
 export const register = async ( clientInfo: ClientToSend ) => {
     const urlComplement = "/client";
     return api.post(urlComplement, clientInfo);
-    
+}
 
+export const getPublicKey = () => {
+    const urlComplement = "/auth/public-key";
+    return api.get(urlComplement);
 }

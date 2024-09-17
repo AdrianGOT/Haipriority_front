@@ -1,32 +1,40 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import { TextField } from "@mui/material";
 import { ClientLogin } from "../../../interfaces/client.interfaces";
 import { useLoginFetch } from "../hooks/useLoginFetch";
 import toast from "react-hot-toast";
+import { useKey } from "../hooks/useKey";
+import { encryptDataV2 } from "../../helpers/encryptData";
+
 
 const Login = () => {
     const {register, handleSubmit, formState: {errors} } = useForm();
     const [data, setData] = useState<ClientLogin | null>(null);
     const { loading, finishMsg } = useLoginFetch(data);
-    const navigate = useNavigate(); 
+    const { publicKey } = useKey();
 
     useEffect(()=> {
         if(!finishMsg) return;
         toast.success(finishMsg);
-        navigate("/");
+        window.location.replace("/");
 
     },[finishMsg])
     
-    const submit =  handleSubmit(info => {
-        setData(info as unknown as ClientLogin);
+    const submit =  handleSubmit(async info => {
+        const data = info as unknown as ClientLogin;
+
+        const passwordEncrypted = await encryptDataV2(data.password!, publicKey)        
+        data.password = passwordEncrypted? passwordEncrypted : "";
+        setData(data);
     })
 
 
     return (
         <>
+        <pre>{publicKey}</pre>
             <h3>Inicio de sesion</h3>
             
             <form className="form" onSubmit={submit}>
