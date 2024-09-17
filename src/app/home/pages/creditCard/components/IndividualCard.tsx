@@ -3,7 +3,7 @@ import { Card as CardInit } from "../interfaces/card"
 import { VisaIcon } from "../../../components/icons/VisaIcon";
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon";
 import { CreationCardDialog } from "../../../components/CreationCardDialog";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CreatingCard, CreditCardInit } from "../interfaces/creditCard";
 import { useCreditCard } from "../hooks/useCreditCard";
 
@@ -40,7 +40,7 @@ const IndividualCard = ({info}: Prop) => {
             }
             console.log(value, creditCardToCreate);
             
-            await createCreditCard(creditCardToCreate);
+            await createCreditCard(creditCardToCreate, info);
         }
 
         setOpen(!open);

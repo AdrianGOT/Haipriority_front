@@ -5,6 +5,7 @@ import { MasterCardIcon } from "../../../components/icons/MasterCardIcon"
 import { generateDateToString } from "../../../../helpers/dateHelper"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from "react"
+import { useCreditCard } from "../hooks/useCreditCard"
 
 interface Prop{
     info: CreditCard
@@ -13,6 +14,7 @@ interface Prop{
 
 const IndividualCreditCard = ({info}: Prop) => {
 
+    const { deleteCC } = useCreditCard();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const getAnSpace = ( index : number) => (index !== 0 && index % 4 === 0)? " " : "";  
@@ -23,9 +25,7 @@ const IndividualCreditCard = ({info}: Prop) => {
           }).format(price)
     } 
     const franchiseIcon = info.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
-    const numberFormated = info.number
-        .split("")
-        .reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
+    const numberFormated = info.number.split("").reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
     const dateFormated = generateDateToString(new Date(info.expirationDate));
     const priceAllowedFormated = getPriceFormatted(info.card.amoutallowed);
     const currentAmountFormated = getPriceFormatted(info.current_amount);
@@ -37,6 +37,10 @@ const IndividualCreditCard = ({info}: Prop) => {
     }
     const handleClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(ev.currentTarget);
+    }
+
+    const deleteCreditCard = async () => {
+        const cardDeleted = await deleteCC(info.id);
     }
 
     return (
@@ -64,7 +68,7 @@ const IndividualCreditCard = ({info}: Prop) => {
                     }}
                 >
                     <MenuItem onClick={handleClose}>Editar</MenuItem>
-                    <MenuItem onClick={handleClose}>Eliminar</MenuItem>
+                    <MenuItem onClick={deleteCreditCard}>Eliminar</MenuItem>
                     <MenuItem onClick={handleClose}>Usar</MenuItem>
                 </Menu>
             </div>

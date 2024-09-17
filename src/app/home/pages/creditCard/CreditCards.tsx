@@ -9,9 +9,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { useCards } from "./hooks/useCards";
 import { useClient } from "../../../hooks/useClient";
 import { ROLES } from "../../../../interfaces/client.interfaces";
-import { CreditcardsProvider } from "../../../../context/creditCard";
 
-import "./creditCard.css";
+import "./creditCard.css"
 
 type TabTypes = "creditCard" | "card";
 
@@ -20,9 +19,6 @@ const CreditCards = () => {
     const { cards, getCardList } = useCards();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("creditCard");
     const { client } = useClient();
-
-    console.log(creditCards);
-    
 
     useEffect(()=> {
         setTimeout(async () => {
@@ -35,7 +31,7 @@ const CreditCards = () => {
     }, [])
 
     useEffect(() => {
-        const page = creditCards.length > 0? "creditCard" : "card";
+        const page =creditCards.length > 0? "creditCard" : "card";
         setPageSelected(page);
     },[creditCards])
 
@@ -46,7 +42,6 @@ const CreditCards = () => {
     }
     
     return (
-        <CreditcardsProvider>
             <TabContext value={pageSelected}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList 
@@ -64,7 +59,7 @@ const CreditCards = () => {
                 }}>
                     
                     <CardList 
-                        cards={creditCards} 
+                        cards={creditCards || []} 
                         fComponent={getIndividualCreditCard} />
 
                 </TabPanel>
@@ -78,7 +73,7 @@ const CreditCards = () => {
                     </Box>
 
                     <CardList 
-                        cards={cards} 
+                        cards={cards || []} 
                         fComponent={getIndividualCard} />
 
                         {
@@ -100,7 +95,7 @@ const CreditCards = () => {
 
                 </TabPanel>
             </TabContext>
-        </CreditcardsProvider>
+
 
     )
 }
