@@ -35,14 +35,14 @@ function App() {
                 <Route index element={ <Navigate to="login"/> }/>
                 <Route path='login' element={ 
 
-                  <Suspense fallback={<h3>loadiung login</h3> }>
+                  <Suspense fallback={<h3>loading login</h3> }>
                     <LoginComponent />
                   </Suspense>
                 } />
 
                 <Route path='register' element={ 
                 
-                <Suspense fallback={<h3>loadiung regiser</h3> }>
+                <Suspense fallback={<h3>loading regiser</h3> }>
                     <RegisterComponent />
                   </Suspense>
                 
