@@ -34,7 +34,6 @@ const Login = () => {
 
     return (
         <>
-        <pre>{publicKey}</pre>
             <h3>Inicio de sesion</h3>
             
             <form className="form" onSubmit={submit}>
