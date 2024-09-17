@@ -26,8 +26,6 @@ const CreditCards = () => {
                 getClientCredictCards() , getCardList()
             ])
         })
-        console.log("se paso po aca");
-        
     }, [])
 
     useEffect(() => {

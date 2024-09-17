@@ -1,16 +1,16 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material"
 import { useForm } from "react-hook-form";
-import { Card } from "../pages/creditCard/interfaces/card";
-import { useClient } from "../../hooks/useClient";
+import { useClient } from "../../../../hooks/useClient";
 import { useEffect } from "react";
-import { generateDateToString } from "../../helpers/dateHelper";
+import { generateDateToString } from "../../../../helpers/dateHelper";
+import { CreditCard } from "../interfaces/creditCard";
 
 export interface SimpleDialogProps {
     open: boolean;
-    card: Card;
+    card?: CreditCard;
     onClose: (value: any) => void;
   }
-  
+
 
 export const CreationCardDialog = (props: SimpleDialogProps) => {
     const { onClose, open, card } = props;
@@ -20,21 +20,37 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
         handleSubmit, 
         formState: {errors},
         setValue,
-        reset
+        watch,
+        reset,
     } = useForm();
 
     useEffect(()=> {
         if(!open) return;
+        
         setTimeout(() => {
-            const firstLetter =  client.name.charAt(0);
-            const restOfName = client.name.slice(1,client.name.length);
-            setValue("cardName", `${firstLetter.toUpperCase()}${restOfName}`);
-            setValue("expirationDate", generateExpDate()  )
+           
+            setValue("cardName", card? card.cardName : generateCardName());
+            setValue("expirationDate", card? generateDateToString(new Date(card.expirationDate)) : generateExpDate());
+        
+            if(!card) return;
+            setValue("cvc", card.cvc);
+            setValue("courtDate", card.courtDate);
+            setValue("paymentDate", card.paymentDate);
+
+
 
         })
         
     }, [open])
     
+    const title = card? "Actualizando Tarjeta de credito" : "Asignación de tarjeta de credito";
+
+    const generateCardName = () => {
+        const firstLetter =  client.name.charAt(0);
+        const restOfName = client.name.slice(1,client.name.length);
+        return `${firstLetter.toUpperCase()}${restOfName}`;
+    }
+
     const generateExpDate = () => {
         const currentDate = new Date();
         const expDate = new Date( currentDate.getFullYear() +3,  currentDate.getMonth() + 1, currentDate.getDay() )
@@ -43,13 +59,14 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
 
     const handleClose = () => {
         reset();
-        onClose(null)
+        onClose(null);
     }
 
     
-    const sendData = handleSubmit(info => {
-        onClose(info);
-        
+    const sendData = handleSubmit(_ => {
+        const values = watch();         
+        onClose(values); 
+        reset();
     }) 
 
     const validateRangeDate = (value: number): boolean | string => {
@@ -60,7 +77,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
 
     return (
          <Dialog onClose={handleClose} open={open}>
-            <DialogTitle textAlign={"center"}>{"Asignación de tarjeta de credito"}</DialogTitle>
+            <DialogTitle textAlign={"center"}>{title}</DialogTitle>
             <DialogContent>
             <form onSubmit={sendData}  className="form-create form">
                         <div className="cardName">
@@ -69,9 +86,8 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                                             required: {
                                                 value: true, 
                                                 message: "Este valor es requerido"
-                                            }, 
-                                            disabled: true,
-                                            value: client.name
+                                            }
+                                           
                                         })}
                                         error={errors["cardName"]? true : false}
                                         label="Nombre en la tarjeta" 
@@ -102,7 +118,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                                             minLength: {
                                                 value: 3,
                                                 message: "El valor no puede tener menos de 3 caracateres"
-                                            }
+                                            },
                                         })}
                                         error={errors.cvc? true : false}
                                         label="CVC" 
@@ -127,7 +143,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                                             required: { 
                                                 value: true, 
                                                 message: "Este valor es requerido"
-                                            }, disabled: true
+                                            }
                                         })}
                                         error={errors.expirationDate? true : false}
                                         label="Fecha de expiración" 

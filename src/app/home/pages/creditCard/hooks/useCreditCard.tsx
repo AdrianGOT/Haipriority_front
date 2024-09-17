@@ -7,6 +7,7 @@ export const useCreditCard = ( ) => {
         deleteCC,
         creditCards,
         createCreditCard,
+        updatingCreditCard,
         getClientCredictCards,
     } = useContext(CreditCardContext);
  
@@ -14,6 +15,7 @@ export const useCreditCard = ( ) => {
         deleteCC,
         creditCards,
         createCreditCard,
+        updatingCreditCard,
         getClientCredictCards,
     }
 } 

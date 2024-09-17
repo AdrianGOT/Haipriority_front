@@ -1,11 +1,12 @@
 import { Box, Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Typography } from "@mui/material"
-import { CreditCard } from "../interfaces/creditCard"
+import { CreatingCard, CreditCard } from "../interfaces/creditCard"
 import { VisaIcon } from "../../../components/icons/VisaIcon"
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon"
 import { generateDateToString } from "../../../../helpers/dateHelper"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from "react"
 import { useCreditCard } from "../hooks/useCreditCard"
+import { CreationCardDialog } from "./CreationCardDialog"
 
 interface Prop{
     info: CreditCard
@@ -14,9 +15,10 @@ interface Prop{
 
 const IndividualCreditCard = ({info}: Prop) => {
 
-    const { deleteCC } = useCreditCard();
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+    const { deleteCC, updatingCreditCard } = useCreditCard();
+    const [ anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [ openEditDialog, setOpenEditDialog ] = useState(false);
+    
     const getAnSpace = ( index : number) => (index !== 0 && index % 4 === 0)? " " : "";  
     const getPriceFormatted = (price: number) => {
         return new Intl.NumberFormat("en-US", {
@@ -24,7 +26,7 @@ const IndividualCreditCard = ({info}: Prop) => {
             currency: "USD",
           }).format(price)
     } 
-    const franchiseIcon = info.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
+    const franchiseIcon = info?.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
     const numberFormated = info.number.split("").reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
     const dateFormated = generateDateToString(new Date(info.expirationDate));
     const priceAllowedFormated = getPriceFormatted(info.card.amoutallowed);
@@ -39,62 +41,95 @@ const IndividualCreditCard = ({info}: Prop) => {
         setAnchorEl(ev.currentTarget);
     }
 
-    const deleteCreditCard = async () => {
-        const cardDeleted = await deleteCC(info.id);
+    const HandledeleteCard = async () => {
+        handleClose();
+        await deleteCC(info.id);
+    }
+
+    const handleEditCard = () => {
+        setOpenEditDialog(true)
+    }
+
+    const handleCloseEditDialog = async (data: CreatingCard) => {
+        setOpenEditDialog(false);
+        handleClose();
+
+        const cardToUpdate: CreatingCard = {
+            cvc: Number(data.cvc),
+            courtDate: Number(data.courtDate),
+            paymentDate: Number(data.paymentDate),
+            cardName: data.cardName,
+            expirationDate: data.expirationDate,
+            current_amount: 0
+        }
+        
+        await updatingCreditCard(cardToUpdate, info.id);
     }
 
     return (
 
-        <div className="card-container">
-            <div className="card-container__header">
-                <div className="first-line">
-                    <strong>{numberFormated}</strong> 
-                    <div className="card-type">
-                        {franchiseIcon}
-                        <p>{info.card.type}</p>
+        <>
+            <div className="card-container">
+                <div className="card-container__header">
+                    <div className="first-line">
+                        <strong>{numberFormated}</strong> 
+                        <div className="card-type">
+                            {franchiseIcon}
+                            <p>{info.card.type}</p>
+                        </div>
+                    </div>
+                    <IconButton 
+                        id="menu-button"
+                        aria-controls={open ? 'credit-card-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
+                        aria-label="menu" 
+                        size="small">
+                    <MoreVertIcon fontSize="inherit" />
+                    </IconButton>
+
+                    <Menu
+                        id="credit-card-menu"
+                        aria-labelledby="menu-button"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={handleEditCard}>Editar</MenuItem>
+                        <MenuItem onClick={HandledeleteCard}>Eliminar</MenuItem>
+                        <MenuItem onClick={handleClose}>Usar</MenuItem>
+                    </Menu>
+                </div>
+
+                <div className="card-container__content">
+                    <div >
+                        <div>
+                            <span>Cupo: </span> <strong>{priceAllowedFormated}</strong>
+                        </div>
+                        <div>
+                            <span>Gastos: </span>   <strong>{currentAmountFormated}</strong>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <span>Exp:</span>
+                            <strong> {dateFormated} </strong>
+                        </div>
+                        <div>
+                            <span>CVC:</span>
+                            <strong> {info.cvc} </strong>
+                        </div>
                     </div>
                 </div>
-                <IconButton onClick={handleClick} aria-label="menu" size="small">
-                  <MoreVertIcon fontSize="inherit" />
-                </IconButton>
 
-                <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                    }}
-                >
-                    <MenuItem onClick={handleClose}>Editar</MenuItem>
-                    <MenuItem onClick={deleteCreditCard}>Eliminar</MenuItem>
-                    <MenuItem onClick={handleClose}>Usar</MenuItem>
-                </Menu>
             </div>
 
-            <div className="card-container__content">
-                <div >
-                    <div>
-                        <span>Cupo: </span> <strong>{priceAllowedFormated}</strong>
-                    </div>
-                    <div>
-                        <span>Gastos: </span>   <strong>{currentAmountFormated}</strong>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <span>Exp:</span>
-                        <strong> {dateFormated} </strong>
-                    </div>
-                    <div>
-                        <span>CVC:</span>
-                        <strong> {info.cvc} </strong>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+            <CreationCardDialog open={openEditDialog} card={info} onClose={handleCloseEditDialog}/>
+        </>
     )
 }
 

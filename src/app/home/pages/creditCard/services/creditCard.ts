@@ -1,5 +1,5 @@
 import api from "../../../../../lib/customInterceptor";
-import { CreditCardInit } from "../interfaces/creditCard";
+import { CreatingCard, CreditCard, CreditCardInit } from "../interfaces/creditCard";
 
 const complementURL = "/credit-card";
 
@@ -11,8 +11,8 @@ export const createCC = (creditCardInfo: CreditCardInit) => {
     return api.post(complementURL, creditCardInfo )
 }
 
-export const updateCreditCard = (creditCardInfo: CreditCardInit, cardId: number) => {
-    return api.post(`${complementURL}/${cardId}`, creditCardInfo )
+export const updateCreditCard = (creditCard: CreatingCard, cardId: number) => {
+    return api.put(`${complementURL}/${cardId}`, creditCard )
 }
 
 export const deleteCreditCard = (cardId: number) => {

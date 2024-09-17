@@ -40,7 +40,6 @@ export const Register = () => {
         }
     
         const submit = handleSubmit(info => {
-            console.log(info);
             setData(info);
     
         })

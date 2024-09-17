@@ -28,7 +28,6 @@ export const useRegisterFetch = (data: ClientRegister | null) => {
 
             } catch (error) {
                 console.log(error);
-                
                 setLoading(false)
             }            
             

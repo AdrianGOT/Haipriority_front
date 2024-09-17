@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import { Card } from "../app/home/pages/creditCard/interfaces/card";
-import { CreditCard, CreditCardInit } from "../app/home/pages/creditCard/interfaces/creditCard";
-import { createCC, deleteCreditCard, getCreditCards } from "../app/home/pages/creditCard/services/creditCard";
+import { CreatingCard, CreditCard, CreditCardInit } from "../app/home/pages/creditCard/interfaces/creditCard";
+import { createCC, deleteCreditCard, getCreditCards, updateCreditCard } from "../app/home/pages/creditCard/services/creditCard";
 import toast from "react-hot-toast";
 import { getCards } from "../app/home/pages/creditCard/services/card";
 
@@ -11,14 +11,15 @@ interface CardsContext {
   getCardList            : () => void
   createCreditCard       : (cCardInfo: CreditCardInit, cardBase: Card) => void
   getClientCredictCards  : () => void,
-  deleteCC               :(cardId: number) => void;
-
+  deleteCC               : (cardId: number) => void;
+  updatingCreditCard     : (data: CreatingCard, cardId: number) => void;
 }
 
 const initialValues: CardsContext = {
     getClientCredictCards : () => {},
     createCreditCard      : () => {},
     getCardList           : () => {},
+    updatingCreditCard    : () => {},
     deleteCC              : () => {},
     cards                 : [],
     creditCards           : [],
@@ -31,7 +32,6 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
 
     const [ cards, setCards] = useState<Card[]>([]);
     const [ creditCards, setCreditCards] = useState<CreditCard[]>([]);
-    console.log("========= se ha actualizado", creditCards);
     
     const createNewCreditCard = async (cardInfo: CreditCardInit, cardBase: Card) => {
         const creditCard = await createCC(cardInfo);
@@ -67,6 +67,24 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
         }
     }
 
+    const updatingCreditCard = async (data: CreatingCard, cardId: number) => {
+        const creditCardUpdated = await updateCreditCard( data, cardId );
+
+        if(!creditCardUpdated.ok) return;
+
+        toast.success(creditCardUpdated.msg);
+
+        setCreditCards( prevCCards => 
+            prevCCards.map(card => 
+                card.id === cardId? creditCardUpdated.card : card
+            ) 
+        )
+
+    }
+    
+
+
+
     const getCardList = async() => {
         const cards = await getCards();
         setCards( cards.cards );
@@ -78,6 +96,7 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
             creditCards,
             createCreditCard,
             getClientCredictCards,
+            updatingCreditCard,
             getCardList,
             deleteCC
         }}>

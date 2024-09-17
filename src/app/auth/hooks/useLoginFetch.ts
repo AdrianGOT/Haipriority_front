@@ -31,7 +31,6 @@ export const useLoginFetch = (data: ClientLogin | null) => {
                 
             } catch (error) {
                 console.log(error);
-                
                 setLoading(false)
             }            
             

@@ -24,7 +24,6 @@ const DebitCardComponent = lazy(()=> import('./app/home/pages/debitCard/DebitCar
 const LoanComponent = lazy(()=> import('./app/home/pages/loan/Loan'));
 
 function App() {
-  console.log("render en app");
   
   return (
     <>
