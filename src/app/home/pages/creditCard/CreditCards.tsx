@@ -36,9 +36,15 @@ const CreditCards = () => {
     const showAddCardButton = client.roles.some(role => ROLES.admin === role);
 
     const handleChange = (event: React.SyntheticEvent, page: TabTypes) => {
-        setPageSelected(page)
+        setPageSelected(page);
+        
     }
     
+    const tabPadding = {
+        card: pageSelected === "card"? "24px": "0px",
+        creditCard : pageSelected === "creditCard"? "24px": "0px"
+    }
+
     return (
             <TabContext value={pageSelected}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -50,22 +56,15 @@ const CreditCards = () => {
                         <Tab label="Disponibles" value="card" />
                     </TabList>
                 </Box>
-                <TabPanel value="creditCard" sx={{
-                    display: 'flex',
-                    flexDirection: "column",
-                    alignItems: 'center'
-                }}>
+                
+                <TabPanel value="creditCard" className="tab-container" sx={{ padding: tabPadding.creditCard }}>
                     
                     <CardList 
                         cards={creditCards || []} 
                         fComponent={getIndividualCreditCard} />
 
                 </TabPanel>
-                <TabPanel value="card" sx={{
-                    display: 'flex',
-                    flexDirection: "column",
-                    alignItems: 'center'
-                }}>
+                <TabPanel value="card" sx={{  padding: tabPadding.card,  }} className="tab-container">
                     <Box sx={{ width: '100%', textAlign: 'center', fontSize: '1.2rem', marginBottom: '2rem' }}>
                         Tarjetas disponibles para ser solicitadas 
                     </Box>

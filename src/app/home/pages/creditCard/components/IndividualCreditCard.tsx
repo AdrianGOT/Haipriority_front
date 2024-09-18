@@ -72,7 +72,10 @@ const IndividualCreditCard = ({info}: Prop) => {
             <div className="card-container">
                 <div className="card-container__header">
                     <div className="first-line">
-                        <strong>{numberFormated}</strong> 
+                        <div>
+                            <strong>{numberFormated}</strong>
+                            <p>{info.cardName}</p> 
+                        </div>
                         <div className="card-type">
                             {franchiseIcon}
                             <p>{info.card.type}</p>

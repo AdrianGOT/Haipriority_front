@@ -27,7 +27,7 @@ const IndividualCard = ({info}: Prop) => {
 
       const handleCloseDialog = async (value:CreatingCard) => {
         if(value) {
-        
+            
             const creditCardToCreate: CreditCardInit = {
                 cardId: info.id,
                 cvc: Number(value.cvc),
@@ -38,6 +38,7 @@ const IndividualCard = ({info}: Prop) => {
                 current_amount: 0
 
             }
+            console.log(creditCardToCreate);
             
             await createCreditCard(creditCardToCreate, info);
         }
@@ -51,7 +52,7 @@ const IndividualCard = ({info}: Prop) => {
         <>
         
         <Tooltip title="Seleccione para asignarla">        
-            <Card sx={{ maxWidth: 345 }}>
+            <Card sx={{ maxWidth: 345 , height: 110}}>
                 <CardActionArea  onClick={handleClick}>
                 
                 <CardContent >

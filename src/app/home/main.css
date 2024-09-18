@@ -20,18 +20,28 @@
 .modules{
     padding: .5rem;
     grid-area: modules;
+    height: calc(100vh - 77px);
 }
 
 /* ======= Card styles =======*/
+.tab-container{
+    display: 'flex';
+    flex-direction: "column";
+    align-items: "center";
+    width: 100%;
+    height: 78vh;
+    overflow-y: auto;
+}
+
 .cardList-wrapper{
     display: grid;
+    justify-items: center; 
     
-    justify-items: space-around; 
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1rem;
-
-    width: 80%;
 }
+
+
 
 
 .form-create{
