@@ -10,9 +10,9 @@ import { useCards } from "./hooks/useCards";
 import { useClient } from "../../../hooks/useClient";
 import { ROLES } from "../../../../interfaces/client.interfaces";
 
-import "./creditCard.css"
+import "./creditCard.css";
 
-type TabTypes = "creditCard" | "card";
+export type TabTypes = "creditCard" | "card";
 
 const CreditCards = () => {
     const { creditCards, getClientCredictCards } = useCreditCard();
@@ -35,9 +35,8 @@ const CreditCards = () => {
 
     const showAddCardButton = client.roles.some(role => ROLES.admin === role);
 
-    const handleChange = (event: React.SyntheticEvent, page: TabTypes) => {
+    const handleChange = (_: any, page: TabTypes) => {
         setPageSelected(page);
-        
     }
     
     const tabPadding = {

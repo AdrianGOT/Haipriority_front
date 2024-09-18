@@ -4,7 +4,7 @@ import { ToolBar } from '../shared/ToolBar';
 import "./main.css"
 import { Outlet } from 'react-router-dom';
 import { useClient } from '../hooks/useClient';
-import { CreditcardsProvider } from '../../context/creditCard';
+import { CreditcardsProvider } from './pages/creditCard/context/creditCard';
 
 const SideNav = lazy(()=> import('../shared/SideNav') )
 
@@ -29,9 +29,7 @@ const MainPage = () => {
             </div>
             <div className='modules'>
                 <Suspense fallback={<h3> loading modules ... </h3>}>
-                    <CreditcardsProvider>
                         <Outlet/>
-                    </CreditcardsProvider>
                 </Suspense>
             </div>
 

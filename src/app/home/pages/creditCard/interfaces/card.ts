@@ -1,3 +1,5 @@
+import { Franchise } from "../../../interfaces/cards";
+
 export interface Card{
     amoutallowed: number;
     franchise:    ​​​Franchise;
@@ -5,7 +7,3 @@ export interface Card{
     id:           number;
 }
 
-export enum Franchise {
-    masterCard = "MASTER CARD",
-    visa = "VISA"
-}

@@ -1,10 +1,8 @@
 import api from "../../../../../lib/customInterceptor";
 
-const complementURL = "/credit-card";
+const complementURL = "/debit-card";
 
 export const getCards = () => {
     const complement = complementURL + "/card"; 
     return api.get(complement);
 }
-
-// Make the others methos!

@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import { CreditCardContext } from "../context/creditCard";
+import { DebitCardContext } from "../context/debitCard";
 
 export const useCards = () => {
     const { 
         cards, 
-        getCardList 
-    } = useContext(CreditCardContext);
+        getCardList
+    } = useContext(DebitCardContext);
 
 
     return {

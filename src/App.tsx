@@ -9,9 +9,11 @@ import './App.css';
 import { validaToken } from './middleware/validateToken';
 import { lazy, Suspense } from 'react';
 import { ClientProvider } from './context/client';
+import { CreditcardsProvider } from './app/home/pages/creditCard/context/creditCard';
+import { DebitCardProvider } from './app/home/pages/debitCard/context/debitCard';
 
 
-const MainLayout = lazy(()=> import('./app/home/main'));
+const MainPage = lazy(()=> import('./app/home/main'));
 const LoginComponent = lazy(()=> import('./app/auth/pages/Login'));
 const RegisterComponent = lazy(()=> import('./app/auth/pages/Register'));
 
@@ -47,10 +49,20 @@ function App() {
             </Route>
 
             <Route element={ <ProtectedRoute validations={[validaToken]} redirectTo='/auth/'/>} >
-                <Route path='/' element={<MainLayout/>}>
+                <Route path='/' element={<MainPage/>}>
                   <Route index element={<Navigate to={"credit-card"}/>}></Route>
-                  <Route path='credit-card' element={<CreditCardComponent/>}/>
-                  <Route path='debit-card' element={<DebitCardComponent/>}/>
+
+                    <Route path='credit-card' element={
+                      <CreditcardsProvider> 
+                        <CreditCardComponent/>
+                      </CreditcardsProvider>  
+                    }/>
+                  
+                  <Route path='debit-card' element={
+                    <DebitCardProvider>
+                      <DebitCardComponent/>
+                    </DebitCardProvider>
+                  }/>
                   <Route path='loan' element={<LoanComponent/>}/>
                   {/* <Route path='loan' element={<LoanComponent/>}/>  TODO CLIENTS*/}
                 </Route>

@@ -48,7 +48,7 @@ export const Register = () => {
             <>
                 <h3>Registarse</h3>
     
-                <form className="form" onSubmit={submit}>
+                <form className="general-form auth-form" onSubmit={submit}>
                     <div>
                         <TextField 
                                     label="Nombre"

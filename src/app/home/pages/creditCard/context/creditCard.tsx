@@ -1,9 +1,14 @@
 import { createContext, useState } from "react";
-import { Card } from "../app/home/pages/creditCard/interfaces/card";
-import { CreatingCard, CreditCard, CreditCardInit } from "../app/home/pages/creditCard/interfaces/creditCard";
-import { createCC, deleteCreditCard, getCreditCards, updateCreditCard } from "../app/home/pages/creditCard/services/creditCard";
+import { Card } from "../interfaces/card";
+import { CreatingCard, CreditCard, CreditCardInit } from "../interfaces/creditCard";
+import { 
+    getCreditCards, 
+    deleteCreditCard,
+    updateCreditCard,
+    createCreditCard as createCC, 
+} from "../services/creditCard";
 import toast from "react-hot-toast";
-import { getCards } from "../app/home/pages/creditCard/services/card";
+import { getCards } from "../services/card";
 
 interface CardsContext {
   cards                  : Card[],
@@ -63,8 +68,14 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
     const deleteCC = async(cardId: number) => {
         const cardDeleted = await deleteCreditCard(cardId);
         if(cardDeleted.ok) {
+            
             toast.success(cardDeleted.msg);
-            setCreditCards(prevCards => prevCards.filter( card => card.id !== cardId ));
+
+            setCreditCards(prevCards => 
+                prevCards.filter( card => 
+                    card.id !== cardId 
+                )
+            );
         }
     }
 

@@ -36,7 +36,7 @@ const Login = () => {
         <>
             <h3>Inicio de sesion</h3>
             
-            <form className="form" onSubmit={submit}>
+            <form className="general-form auth-form" onSubmit={submit}>
                 <div>
                     <TextField   
                                 {...register("email",{

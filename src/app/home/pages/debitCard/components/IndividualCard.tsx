@@ -2,11 +2,10 @@ import { Box, Card, CardActionArea, CardContent, Tooltip, Typography } from "@mu
 import { Card as CardInit } from "../interfaces/card"
 import { VisaIcon } from "../../../components/icons/VisaIcon";
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon";
-import { CreationCardDialog } from "./CreditCardDialog";
+import { CreationCardDialog } from "./DebitCardDialog";
 import { useState } from "react";
-import { CreatingCard, CreditCardInit } from "../interfaces/creditCard";
-import { useCreditCard } from "../hooks/useCreditCard";
-import { getPriceFormatted } from "../../../../helpers/transforCardInfo";
+import { DebitCard } from "../interfaces/debitCard";
+import { useDebitCard } from "../hooks/useDebitCard";
 
 
 interface Prop{
@@ -15,42 +14,33 @@ interface Prop{
 
 const IndividualCard = ({info}: Prop) => {
     const [open, setOpen] = useState<boolean>(false);
-    const { createCreditCard } = useCreditCard();
+    const { createDebitCard } = useDebitCard();
 
-
-    const priceFormated = getPriceFormatted(info.amoutallowed);
-
-      const handleClick = ()=>{
+    const handleClick = ()=>{
         setOpen(!open)
-      }
+    }
 
-      const handleCloseDialog = async (value:CreatingCard) => {
+    const handleCloseDialog = async (value: DebitCard) => {
         if(value) {
             
-            const creditCardToCreate: CreditCardInit = {
-                cardId: info.id,
+            const creditCardToCreate: DebitCard = {
                 cvc: Number(value.cvc),
                 cardName: value.cardName,
-                courtDate: Number(value.courtDate),
-                paymentDate: Number(value.paymentDate),
+                current_amount: 0,
                 expirationDate: value.expirationDate,
-                current_amount: 0
-
+                cardId: info.id,
             }
             
-            await createCreditCard(creditCardToCreate, info);
+            await createDebitCard(creditCardToCreate, info);
         }
 
         setOpen(!open);
-      }
+    }
 
-
-     
     return (
         <>
-        
         <Tooltip title="Seleccione para asignarla">        
-            <Card sx={{ width: 330 , height: 110}}>
+            <Card sx={{ width: 330 , height: 76}}>
                 <CardActionArea  onClick={handleClick}>
                 
                 <CardContent >
@@ -62,11 +52,6 @@ const IndividualCard = ({info}: Prop) => {
                         {info.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>  }
 
                     </Box>
-
-                    <Typography variant="h6" sx={{ color: 'text.secondary', textAlign: 'center' }}>
-                        <span>Cupo: </span> { priceFormated }
-                        
-                    </Typography>
                 </CardContent>
                 </CardActionArea>
             </Card>

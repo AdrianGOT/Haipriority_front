@@ -79,7 +79,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
          <Dialog onClose={handleClose} open={open}>
             <DialogTitle textAlign={"center"}>{title}</DialogTitle>
             <DialogContent>
-            <form onSubmit={sendData}  className="form-create form">
+            <form onSubmit={sendData}  className="form-dialog general-form credit-card-areas ">
                         <div className="cardName">
                             <TextField   
                                         {...register("cardName",{

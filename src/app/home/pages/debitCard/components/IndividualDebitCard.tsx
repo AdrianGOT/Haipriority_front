@@ -1,35 +1,37 @@
 import { Box, Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Typography } from "@mui/material"
-import { CreatingCard, CreditCard } from "../interfaces/creditCard"
+// import { CreatingCard, CreditCard } from "../interfaces/creditCard"
 import { VisaIcon } from "../../../components/icons/VisaIcon"
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon"
 import { generateDateToString } from "../../../../helpers/dateHelper"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from "react"
-import { useCreditCard } from "../hooks/useCreditCard"
-import { CreationCardDialog } from "./CreditCardDialog"
-import { getPriceFormatted } from "../../../../helpers/transforCardInfo"
+// import { useCreditCard } from "../hooks/useCreditCard"
+import { CreationCardDialog } from "./DebitCardDialog"
+import { useDebitCard } from "../hooks/useDebitCard";
+import { getPriceFormatted } from "../../../../helpers/transforCardInfo";
+import { DebitCard, DebitCardComplete } from "../interfaces/debitCard";
+import { updateCreditCard } from "../../creditCard/services/creditCard";
+import { updateDebitCard } from "../services/debitCard";
 
 interface Prop{
-    info: CreditCard
+    info: DebitCardComplete
 }
 
 
-const IndividualCreditCard = ({info}: Prop) => {
-
-    const { deleteCC, updatingCreditCard } = useCreditCard();
-    const [ anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+const IndividualDebitCard = ({info}: Prop) => {
+    const { deleteDebitCard, updatingDebitCard } = useDebitCard();
     const [ openEditDialog, setOpenEditDialog ] = useState(false);
-    
-    const getAnSpace = ( index : number) => (index !== 0 && index % 4 === 0)? " " : "";  
-    const franchiseIcon = info?.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
-    const numberFormated = info.number.split("").reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
-    const dateFormated = generateDateToString(new Date(info.expirationDate));
-    const priceAllowedFormated = getPriceFormatted(info.card.amoutallowed);
-    const currentAmountFormated = getPriceFormatted(info.current_amount);
-
+    const [ anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
-    const handleClose = () => {
+    const getAnSpace = ( index : number) => (index !== 0 && index % 4 === 0)? " " : "";  
+    const numberFormated = info.number.split("").reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
+    const franchiseIcon = info?.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
+    const dateFormated = generateDateToString(new Date(info.expirationDate));
+    const currentAmount = getPriceFormatted(info.current_amount);
+
+
+    const handleCloseMenu = () => {
         setAnchorEl(null);
     }
     const handleClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -37,30 +39,24 @@ const IndividualCreditCard = ({info}: Prop) => {
     }
 
     const HandledeleteCard = async () => {
-        handleClose();
-        await deleteCC(info.id);
+        handleCloseMenu();
+        await deleteDebitCard(info.id);
     }
 
-    const handleEditCard = () => {
-        setOpenEditDialog(true)
-    }
-
-    const handleCloseEditDialog = async (data: CreatingCard) => {
+    const handleCloseDialog = async (data: DebitCard) => {
         setOpenEditDialog(false);
-        handleClose();
+        handleCloseMenu();
         
         if(!data) return; 
                 
-        const cardToUpdate: CreatingCard = {
+        const cardToUpdate: DebitCard = {
             cvc: Number(data.cvc),
-            courtDate: Number(data.courtDate),
-            paymentDate: Number(data.paymentDate),
             cardName: data.cardName,
             expirationDate: data.expirationDate,
             current_amount: 0
         }
         
-        await updatingCreditCard(cardToUpdate, info.id);
+        await updatingDebitCard(cardToUpdate, info.id);
     }
 
     return (
@@ -94,24 +90,21 @@ const IndividualCreditCard = ({info}: Prop) => {
                         aria-labelledby="menu-button"
                         anchorEl={anchorEl}
                         open={open}
-                        onClose={handleClose}
+                        onClose={handleCloseMenu}
                         MenuListProps={{
                         'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={handleEditCard}>Editar</MenuItem>
+                        <MenuItem onClick={() => setOpenEditDialog(true)}>Editar</MenuItem>
                         <MenuItem onClick={HandledeleteCard}>Eliminar</MenuItem>
-                        <MenuItem onClick={handleClose}>Usar</MenuItem>
+                        <MenuItem onClick={handleCloseMenu}>Usar</MenuItem>
                     </Menu>
                 </div>
 
                 <div className="card-container__content">
                     <div >
                         <div>
-                            <span>Cupo: </span> <strong>{priceAllowedFormated}</strong>
-                        </div>
-                        <div>
-                            <span>Gastos: </span>   <strong>{currentAmountFormated}</strong>
+                            <span>Saldo: </span> <strong>{currentAmount}</strong>
                         </div>
                     </div>
                     <div>
@@ -128,11 +121,11 @@ const IndividualCreditCard = ({info}: Prop) => {
 
             </div>
 
-            <CreationCardDialog open={openEditDialog} card={info} onClose={handleCloseEditDialog}/>
+            <CreationCardDialog open={openEditDialog} card={info} onClose={handleCloseDialog}/>
         </>
     )
 }
 
-export default function getIndividualCreditCard(data: CreditCard){
-    return <IndividualCreditCard info={data} key={`${data.id}`}/>
+export default function getIndividualDebitCard(data: DebitCardComplete){
+    return <IndividualDebitCard info={data} key={`${data.id}${data.number}${data.clientId}`}/>
 }

@@ -7,7 +7,7 @@ export const getCreditCards = () => {
     return api.get(complementURL);    
 }
 
-export const createCC = (creditCardInfo: CreditCardInit) => {
+export const createCreditCard = (creditCardInfo: CreditCardInit) => {
     return api.post(complementURL, creditCardInfo )
 }
 

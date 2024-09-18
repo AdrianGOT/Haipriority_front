@@ -8,7 +8,7 @@ interface Prop {
 }
 
 export const CardList:  React.FC<Prop> = ( {cards = [], fComponent }) => {
-    
+
     return (
         <section className="cardList-wrapper">
             {cards.length > 0 && cards.map(card => fComponent(card) ) }
