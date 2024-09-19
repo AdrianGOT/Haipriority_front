@@ -35,13 +35,11 @@
 
 .cardList-wrapper{
     display: grid;
-    justify-items: center; 
+    justify-items: var(--aling, center); 
     
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1rem;
 }
-
-
 
 .form-dialog{
     padding: 1rem;
@@ -84,7 +82,7 @@
 }
 
 /* ======== Cards styles ========*/
-.card-container{
+.card-container, .loan-container{
     width: 330px;
     height: 110px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
@@ -96,7 +94,11 @@
     flex-direction: column;
 }
 
-.card-container__header{
+.loan-container{
+    width: 350px;
+}
+
+.card-container__header, .loan-container__header{
     display: flex;
     align-items: center;
 }
@@ -108,12 +110,15 @@
     flex-grow: 1;
 }
 
-.card-container__content{
+.card-container__content, .loan-container__content{
     display: flex;
     justify-content: space-between;
+    gap: 1rem
 }
 
-.card-container__content > div{
+
+
+.card-container__content > div, .loan-container__content > div{
     display: flex;
     flex-direction: column;
 }
@@ -122,4 +127,16 @@
     display: flex;
     align-items: center;
     gap: .4rem;
+}
+
+@media(min-width: 900px) {
+    .cardList-wrapper{
+        --aling: left;
+    }
+}
+
+@media(width <= 660px) {
+    .cardList-wrapper{
+        --aling: center;
+    }
 }

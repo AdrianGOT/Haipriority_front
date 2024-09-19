@@ -18,7 +18,7 @@ const IndividualCard = ({info}: Prop) => {
     const { createCreditCard } = useCreditCard();
 
 
-    const priceFormated = getPriceFormatted(info.amoutallowed);
+    const priceFormated = getPriceFormatted(info.amountAllowed);
 
       const handleClick = ()=>{
         setOpen(!open)

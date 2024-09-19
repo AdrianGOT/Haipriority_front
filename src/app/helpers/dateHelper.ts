@@ -6,3 +6,8 @@ export const generateDateToString = (date: Date) => {
 
     return `${year}-${month}-${day}`
 }   
+
+export const generateYearLimitInDate = (years : number): Date => {
+    const currentDate = new Date();
+    return new Date(currentDate.getFullYear() + years, 1, 1);
+}

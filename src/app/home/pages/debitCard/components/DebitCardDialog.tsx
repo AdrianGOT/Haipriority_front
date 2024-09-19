@@ -4,6 +4,7 @@ import { useClient } from "../../../../hooks/useClient";
 import { useEffect } from "react";
 import { generateDateToString } from "../../../../helpers/dateHelper";
 import { DebitCardComplete } from "../interfaces/debitCard";
+import { generateCardName } from "../../../../helpers/transformClientInfo";
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -29,7 +30,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
         
         setTimeout(() => {
            
-            setValue("cardName", card? card.cardName : generateCardName());
+            setValue("cardName", card? card.cardName : generateCardName(client.name));
             setValue("expirationDate", card? generateDateToString(new Date(card.expirationDate)) : generateExpDate());
         
             if(!card) return;
@@ -39,12 +40,6 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
     }, [open])
     
     const title = card? "Actualizando Tarjeta de credito" : "Asignación de tarjeta de credito";
-
-    const generateCardName = () => {
-        const firstLetter =  client.name.charAt(0);
-        const restOfName = client.name.slice(1,client.name.length);
-        return `${firstLetter.toUpperCase()}${restOfName}`;
-    }
 
     const generateExpDate = () => {
         const currentDate = new Date();

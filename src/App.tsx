@@ -11,6 +11,7 @@ import { lazy, Suspense } from 'react';
 import { ClientProvider } from './context/client';
 import { CreditcardsProvider } from './app/home/pages/creditCard/context/creditCard';
 import { DebitCardProvider } from './app/home/pages/debitCard/context/debitCard';
+import { LoanProvider } from './app/home/pages/loan/context/loan';
 
 
 const MainPage = lazy(()=> import('./app/home/main'));
@@ -63,7 +64,11 @@ function App() {
                       <DebitCardComponent/>
                     </DebitCardProvider>
                   }/>
-                  <Route path='loan' element={<LoanComponent/>}/>
+                  <Route path='loan' element={
+                    <LoanProvider>
+                      <LoanComponent/>
+                    </LoanProvider>
+                  }/>
                   {/* <Route path='loan' element={<LoanComponent/>}/>  TODO CLIENTS*/}
                 </Route>
                 

@@ -19,7 +19,8 @@ const CreditCards = () => {
     const { cards, getCardList } = useCards();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("creditCard");
     const { client } = useClient();
-
+    console.log(creditCards);
+    
     useEffect(()=> {
         setTimeout(async () => {
             await Promise.all([

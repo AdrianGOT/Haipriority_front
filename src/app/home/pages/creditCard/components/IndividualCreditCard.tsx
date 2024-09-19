@@ -24,7 +24,7 @@ const IndividualCreditCard = ({info}: Prop) => {
     const franchiseIcon = info?.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
     const numberFormated = info.number.split("").reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
     const dateFormated = generateDateToString(new Date(info.expirationDate));
-    const priceAllowedFormated = getPriceFormatted(info.card.amoutallowed);
+    const priceAllowedFormated = getPriceFormatted(info.card.amountAllowed);
     const currentAmountFormated = getPriceFormatted(info.current_amount);
 
     const open = Boolean(anchorEl);
