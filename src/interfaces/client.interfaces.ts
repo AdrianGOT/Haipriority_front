@@ -22,7 +22,7 @@ export interface ClientRegisterInit extends InitClient{
 export type ClientLogin = Pick<InitClient, "email" | "password">
 export type ClientRegister = Omit<ClientRegisterInit, "id" | "roles" | "createdAt" >
 export type ClientToSend = Omit<InitClient, "id" | "roles" | "createdAt" >
-
+export type ClientUpdate = Pick<InitClient, "email" |"name" | "phoneNumber"|"password"> 
 
 export interface LoginResponse { 
     ok     : boolean;

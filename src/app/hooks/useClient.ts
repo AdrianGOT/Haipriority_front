@@ -5,7 +5,8 @@ export const useClient = () => {
     const {
         logout,
         client, 
-        setClient, 
+        setClient,
+        updateClient,
         getClientInfoByToken
     } = useContext(ClientContext);
     
@@ -13,6 +14,7 @@ export const useClient = () => {
         client, 
         logout,
         setClient,
+        updateClient,
         getClientInfoByToken,
     }
 }

@@ -24,6 +24,10 @@ a{
     gap: 0.9rem;
 }
 
+.general-form{
+    margin: .5rem;
+}
+
 .general-form > div{
     position: relative;
     height: calc(40px + 0.9rem);
@@ -42,3 +46,21 @@ a{
     animation: showInputError .2s ease-in;
 }
 
+/* ===== Avatar */
+.box-content .avatar-clickable{
+    width: 3rem;
+    height: 3rem;
+    background-color: rgb(150, 150, 150);
+
+}
+.box-content .avatar-clickable p{
+    font-size: 1rem;
+    background-color: rgb(150, 150, 150);
+
+}
+
+.box-content  .avatar-clickable:hover{
+    cursor: pointer;
+    background-color: rgb(150, 150, 150);
+
+}

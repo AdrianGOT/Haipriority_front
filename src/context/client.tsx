@@ -1,13 +1,16 @@
 import { createContext, useState } from "react";
-import { InitClient } from "../interfaces/client.interfaces"
-import { clientCheck } from "../services/clientCheck";
+import { ClientUpdate, InitClient } from "../interfaces/client.interfaces"
+import { clientCheck } from "../services/client";
+import { updateClient as updateC } from "../services/client";
+import toast from "react-hot-toast";
 
 
 interface ClientContext {
-    client: InitClient,
-    setClient: (client: InitClient) => void
-    getClientInfoByToken: () => void
-    logout: () => void
+    client               : InitClient,
+    logout               : () => void
+    setClient            : (client: InitClient) => void
+    updateClient         : (clientInfo: ClientUpdate) => void
+    getClientInfoByToken : () => void
 }
 
 const clientDefault = {
@@ -22,10 +25,12 @@ const clientDefault = {
 
 
 const initialValues: ClientContext = {
-    client: clientDefault,
-    setClient: (client: InitClient) => {},
-    getClientInfoByToken: async() => {},
-    logout: () => {}
+    client               : clientDefault,
+    logout               : () => {},
+    setClient            : (client: InitClient) => {},
+    updateClient         : () => {},
+    getClientInfoByToken : async() => {},
+    
 }
 
 export const ClientContext = createContext<ClientContext>(initialValues);
@@ -46,11 +51,22 @@ export function ClientProvider({children}: React.PropsWithChildren){
         setClient(clientDefault); 
     }
 
+    const updateClient = async (clientInfo: ClientUpdate) => {
+        const clientResponse = await updateC(clientInfo, client.id);
+
+        if(!clientResponse.ok) return;
+        
+        toast.success(clientResponse.msg);
+        setClient( clientResponse.client );
+        
+    }
+
     return (
         <ClientContext.Provider value={{
             getClientInfoByToken,
             setClient,
             logout,
+            updateClient,
             client,
         }}>    
             {children}
