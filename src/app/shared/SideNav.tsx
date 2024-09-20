@@ -35,7 +35,7 @@ const SideNav = () => {
             display: "flex",
             flexDirection: 'column',
             alignItems: 'center',
-            padding: '1rem',
+
             boxShadow: 'rgba(8, 3, 85, 0.2) 0px 2px 8px 0px',
             justifyContent: "space-between" }}>
             <List 

@@ -4,7 +4,7 @@
     display: grid;
     grid-template-columns: 250px 1fr;
     grid-template-rows: 70px 1fr;
-    /* gap: 10px; */
+    gap: .5rem;
     grid-template-areas: "toolbar toolbar "
                          "sideNav modules"
 }
@@ -15,12 +15,14 @@
 
 .sideNav{
     grid-area: sideNav;
+    height: calc(100% - .5rem);
 }
 
 .modules{
     padding: .5rem;
+    height: calc(100% - .5rem);
     grid-area: modules;
-    height: calc(100vh - 77px);
+    /* height: calc(100vh - 77px); */
 }
 
 /* ======= Card styles =======*/

@@ -64,7 +64,7 @@ export const ClientDialog = (props: SimpleDialogProps) => {
         const values: Partial<InitClient> = data;
         const hasChange = detectedChanges(values);
         
-        if(!hasChange){
+        if(!hasChange && !password){
             toast("No hay valores diferentes",{
                 icon: <InfoIcon/>
             });

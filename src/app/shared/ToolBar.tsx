@@ -51,7 +51,8 @@ export const ToolBar = () => {
                 aria-controls={openMenu? "client-menu" : undefined}
                 aria-expanded={openMenu ? 'true' : undefined}
                 aria-haspopup="true"
-                aria-label="menu" 
+                aria-label="menu"
+                size="small"
                 onClick={handleAvatarClick} className="avatar-clickable"
                 >
 
