@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { ClientUpdate, InitClient } from "../interfaces/client.interfaces"
+import { ClientUpdate, InitClient } from "../app/home/pages/client/interfaces/client.interfaces"
 import { clientCheck } from "../services/client";
 import { updateClient as updateC } from "../services/client";
 import toast from "react-hot-toast";

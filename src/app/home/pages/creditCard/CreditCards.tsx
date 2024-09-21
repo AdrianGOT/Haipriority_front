@@ -8,7 +8,7 @@ import getIndividualCard from "./components/IndividualCard";
 import AddIcon from '@mui/icons-material/Add';
 import { useCards } from "./hooks/useCards";
 import { useClient } from "../../../hooks/useClient";
-import { ROLES } from "../../../../interfaces/client.interfaces";
+import { ROLES } from "../client/interfaces/client.interfaces";
 
 import "./creditCard.css";
 

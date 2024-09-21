@@ -21,6 +21,8 @@ const RegisterComponent = lazy(()=> import('./app/auth/pages/Register'));
 const CreditCardComponent = lazy(()=> import('./app/home/pages/creditCard/CreditCards'));
 const DebitCardComponent = lazy(()=> import('./app/home/pages/debitCard/DebitCard'));
 const LoanComponent = lazy(()=> import('./app/home/pages/loan/Loan'));
+const ClientComponent = lazy(() => import('./app/home/pages/client/Clients'));
+
 
 function App() {
   
@@ -51,7 +53,7 @@ function App() {
 
             <Route element={ <ProtectedRoute validations={[validaToken]} redirectTo='/auth/'/>} >
                 <Route path='/' element={<MainPage/>}>
-                  <Route index element={<Navigate to={"credit-card"}/>}></Route>
+                  <Route index element={<Navigate to={"credit-card"}/>} />
 
                     <Route path='credit-card' element={
                       <CreditcardsProvider> 
@@ -69,7 +71,10 @@ function App() {
                       <LoanComponent/>
                     </LoanProvider>
                   }/>
-                  {/* <Route path='loan' element={<LoanComponent/>}/>  TODO CLIENTS*/}
+
+                  <Route element={ <ProtectedRoute validations={[]} redirectTo='credit-card'/>}> 
+                    <Route path='client' element={<ClientComponent />}/>
+                  </Route>  
                 </Route>
                 
             </Route>

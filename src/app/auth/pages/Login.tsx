@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import { TextField } from "@mui/material";
-import { ClientLogin } from "../../../interfaces/client.interfaces";
+import { ClientLogin } from "../../home/pages/client/interfaces/client.interfaces";
 import { useLoginFetch } from "../hooks/useLoginFetch";
 import toast from "react-hot-toast";
 import { useKey } from "../hooks/useKey";

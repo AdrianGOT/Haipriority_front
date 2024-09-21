@@ -1,4 +1,4 @@
-import { ClientUpdate } from "../interfaces/client.interfaces";
+import { ClientUpdate } from "../app/home/pages/client/interfaces/client.interfaces";
 import api from "../lib/customInterceptor";
 
 export const clientCheck = async () => {

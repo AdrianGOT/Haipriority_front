@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCards } from "./hooks/useCard";
 import { useDebitCard } from "./hooks/useDebitCard";
 import { useClient } from "../../../hooks/useClient";
-import { ROLES } from "../../../../interfaces/client.interfaces";
+import { ROLES } from "../client/interfaces/client.interfaces";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Button, Tab } from "@mui/material";
 import { CardList } from "../../components/CardList";

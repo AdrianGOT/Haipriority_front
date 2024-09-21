@@ -36,7 +36,6 @@ class CustomApi {
             body: newPayload
         }
 
-
         return  this.interceptor(url, option);
     }
 
@@ -46,6 +45,17 @@ class CustomApi {
         const url = this.baseURL + complement;
         const option: RequestInit = {
             method: "PUT",
+            body: newPayload
+        }
+        
+        return this.interceptor(url, option);
+    }
+
+    patch = async (complement: string, payload = {}) => {
+        const newPayload = this.JsonConvert(payload);    
+        const url = this.baseURL + complement;
+        const option: RequestInit = {
+            method: "PATCH",
             body: newPayload
         }
         

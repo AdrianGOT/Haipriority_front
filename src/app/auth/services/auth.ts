@@ -1,4 +1,4 @@
-import { ClientLogin, ClientToSend } from "../../../interfaces/client.interfaces";
+import { ClientLogin, ClientToSend } from "../../home/pages/client/interfaces/client.interfaces";
 import api  from "../../../lib/customInterceptor";
 
 

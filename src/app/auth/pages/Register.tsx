@@ -2,16 +2,20 @@ import { LoadingButton } from "@mui/lab";
 import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ClientRegister } from "../../../interfaces/client.interfaces";
+import { ClientRegister } from "../../home/pages/client/interfaces/client.interfaces";
 import { useRegisterFetch } from "../hooks/useRegisterFetch";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useKey } from "../hooks/useKey";
+import { formValidators } from "../../validators/formValidators";
+import { encryptDataV2 } from "../../helpers/encryptData";
 
 export const Register = () => {
 
         const [data, setData] = useState<ClientRegister | null>(null);
         const { loading, finishMsg } = useRegisterFetch(data);
         const navigate = useNavigate();
+        const { publicKey } = useKey();
 
         const {
             watch,
@@ -34,12 +38,12 @@ export const Register = () => {
         }, [finishMsg])
         
 
-        const validatePasswords = (value: string): string | boolean => {
-            const pass = watch("password");
-            return value === pass || "No coinciden las contraseñas"        
-        }
     
-        const submit = handleSubmit(info => {
+        const submit = handleSubmit(async info => {
+
+            const passwordEncrypted = 
+                await encryptDataV2(info.password!, publicKey);        
+            info.password = passwordEncrypted? passwordEncrypted : "";
             setData(info);
     
         })
@@ -77,13 +81,8 @@ export const Register = () => {
                     <div>
                         <TextField   
                                     {...register("email",{
-                                        required: { 
-                                            value: true, 
-                                            message: "Este valor es requerido"
-                                        }, pattern: {
-                                            value: /^[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}/,
-                                            message: "El correo debe ser valido"
-                                        }
+                                        required: formValidators.required,
+                                        pattern: formValidators.email_pattern,
                                     })}
                                     error={errors.email? true : false}
                                     label="Email" 
@@ -106,10 +105,7 @@ export const Register = () => {
                     <div>
                         <TextField   
                                     {...register("phoneNumber",{
-                                        required: { 
-                                            value: true, 
-                                            message: "Este valor es requerido"
-                                        }
+                                        required: formValidators.required
                                     })}
                                     error={errors.phoneNumber? true : false}
                                     label="Telefono" 
@@ -133,10 +129,7 @@ export const Register = () => {
                     <div>
                         <TextField   
                                     {...register("password",{
-                                        required: { 
-                                            value: true, 
-                                            message: "Este valor es requerido"
-                                        }
+                                        required: formValidators.required
                                     })}
                                     error={errors.password? true : false}
                                     label="Contraseña" 
@@ -160,11 +153,9 @@ export const Register = () => {
                     <div>
                         <TextField
                                 {...register("confirm_password",{
-                                    required: { 
-                                        value: true, 
-                                        message: "Este valor es requerido"  
-                                    }, 
-                                    validate: (value: string)=> validatePasswords(value)
+                                    required: formValidators.required,
+                                    validate: (value: string)=> 
+                                        formValidators.confirm_password(value, watch("password"))
                                     
                                 })}
                                 error={errors["confirm_password"]? true : false}

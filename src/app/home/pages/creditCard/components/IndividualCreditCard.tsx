@@ -15,7 +15,7 @@ interface Prop{
 
 
 const IndividualCreditCard = ({info}: Prop) => {
-
+    
     const { deleteCC, updatingCreditCard } = useCreditCard();
     const [ anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [ openEditDialog, setOpenEditDialog ] = useState(false);

@@ -1,23 +1,25 @@
-import { Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
+import { Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { useClient } from "../../hooks/useClient";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Client, InitClient } from "../../../interfaces/client.interfaces";
+import { Client, InitClient, ROLES } from "../pages/client/interfaces/client.interfaces";
 import toast from "react-hot-toast";
 import InfoIcon from '@mui/icons-material/Info';
 import { formValidators } from "../../validators/formValidators";
-
-type ClientUpdate = Pick<InitClient, "email"|"name"|"phoneNumber"> 
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 export interface SimpleDialogProps {
     open: boolean;
+    clientSelected: InitClient;
     onClose: (value: any) => void;
 }
 
 export const ClientDialog = (props: SimpleDialogProps) => {
-    const {open, onClose} = props;
-    const [hasChanges, setHasChanges] = useState(false);
+    const { open, onClose, clientSelected} = props;
     const { client } = useClient();
+    const createMode = clientSelected.id === 0;
+
+    
     const {
         register, 
         handleSubmit,
@@ -28,16 +30,28 @@ export const ClientDialog = (props: SimpleDialogProps) => {
     } = useForm();
 
     useEffect(() => {
-    
-        if(!detectedChanges(watch())) return;
+       
+        // if(!detectedChanges(watch())) return;
         
         setTimeout(() => {
-            setValue("name", client.name);
-            setValue("email", client.email);
-            setValue("phoneNumber", client.phoneNumber);
+            
+            setValue("name", clientSelected.name);
+            setValue("email", clientSelected.email);
+            setValue("phoneNumber", clientSelected.phoneNumber);
             setValue("password","");
             setValue("password_confirm","");
         })
+
+        if(!open) {
+            
+            reset({
+                "name": "",
+                "email": "",
+                "phoneNumber": 0,
+                "password": "",
+                "password_confirm": "",
+            });
+        } 
     }, [open])    
     
 
@@ -55,7 +69,7 @@ export const ClientDialog = (props: SimpleDialogProps) => {
         })
     }
 
-    const handleUpdateInfo = handleSubmit(data => {
+    const handleSendInfo = handleSubmit(data => {
         const password = data.password || "";
         
         delete data.password;
@@ -72,15 +86,22 @@ export const ClientDialog = (props: SimpleDialogProps) => {
         }
 
         if(password) data = {...data, password}
+        if(clientSelected.id) data = { ...data, id: clientSelected.id}
         onClose(data);
     })
+
+    const handleRemoveRole = () => {
+
+    }
+
+    const RoleList = [ROLES.admin, ROLES.user];
 
     return (
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle textAlign={"center"}> Editar información del cliente </DialogTitle>
             <DialogContent>
 
-                <form onSubmit={handleUpdateInfo} className="general-form ">
+                <form onSubmit={handleSendInfo} className="general-form ">
     
                 <div>
                         <TextField   
@@ -105,8 +126,6 @@ export const ClientDialog = (props: SimpleDialogProps) => {
                     </div>
 
                     <div>
-                        
-
                         <TextField   
                             {...register("email",{
                                 required: formValidators.required
@@ -150,8 +169,14 @@ export const ClientDialog = (props: SimpleDialogProps) => {
                         
                     </div>
 
-                    <hr />
-                    <h4> Actualizar contraseña </h4>
+                    
+
+                    {!createMode && (
+                        <>
+                            <hr />
+                            <h4> Actualizar contraseña </h4>
+                        </>
+                    )}
 
                     <div>
                         <TextField   
@@ -185,13 +210,51 @@ export const ClientDialog = (props: SimpleDialogProps) => {
                         }
                         
                     </div>
+                
+                {/* Lo siguiente es para comprar si se encuentra el usuario entrando en el dialog 
+                    de editar / crear client desde el toolbar o desde el modulo de cliente. 
+                    Si los ids coinciden es porque está accediendo desde el toolbar, de lo contrario desde
+                    el modulo de cliente.
+                */}
+                    {(client.id !== clientSelected.id )&& (
+                        <>
+                            <hr />
+                            <h4> Actualizar Roles </h4>
+                    
+
+                            <Stack direction={"row"} spacing={2} alignItems ={"center"}>
+                                <strong> Roles: </strong>
+                                { clientSelected?.roles.map( role => 
+                                    <Chip 
+                                        key={role} 
+                                        label={role} 
+                                        variant="outlined"
+                                        onDelete={handleRemoveRole}/> 
+                                    ) 
+                                }
+
+                                <IconButton >
+                                    <RefreshIcon/>
+                                </IconButton>
+                            </Stack>
+                        </>
+                    )}
+
                 </form>
           
-                
-                <Stack direction={"row"} spacing={2} alignItems ={"center"}>
-                    <strong> Roles: </strong>
-                    { client.roles.map( role => <Chip key={role} label={role} variant="outlined"/> ) }
-                </Stack>
+                {/* Lo siguiente es para comprar si se encuentra el usuario entrando en el dialog 
+                    de editar / crear client desde el toolbar o desde el modulo de cliente. 
+                    Si los ids coinciden es porque está accediendo desde el toolbar, de lo contrario desde
+                    el modulo de cliente.
+                */}
+                {
+                    client.id === clientSelected.id &&  (
+                        <Stack direction={"row"} spacing={2} alignItems ={"center"}>
+                            <strong> Roles: </strong>
+                            { client?.roles.map( role => <Chip key={role} label={role} variant="outlined"/> ) }
+                        </Stack>
+                    )
+                }
 
             </DialogContent>
             
@@ -200,9 +263,9 @@ export const ClientDialog = (props: SimpleDialogProps) => {
             
                 <Button 
                     variant="contained" 
-                    onClick={handleUpdateInfo} 
+                    onClick={handleSendInfo} 
                     size="small">
-                        Actualizar
+                        {createMode? "Crear cliente" : "Actualizar"}
                 </Button>
             
             </DialogActions>

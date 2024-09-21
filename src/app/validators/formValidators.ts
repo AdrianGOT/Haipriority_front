@@ -7,8 +7,8 @@ export const formValidators = {
         value: /^[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}/,
         message: "El correo debe tener un formato valido"
     },
-    "confirm_password": (value: string, otherValue: string) => {
+    "confirm_password": (value: string, otherValue?: string) => {
         return value === otherValue || "No coinciden las contraseñas"        
-    }
+    }, 
 
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ClientRegister, ClientToSend } from "../../../interfaces/client.interfaces";
+import { ClientRegister, ClientToSend } from "../../home/pages/client/interfaces/client.interfaces";
 import { register } from "../services/auth";
 
 

@@ -2,7 +2,7 @@ import { Avatar, Box, IconButton, Menu, MenuItem } from "@mui/material"
 import { useClient } from "../hooks/useClient"
 import { useState } from "react";
 import { ClientDialog } from "../home/components/ClientDialog";
-import { ClientUpdate } from "../../interfaces/client.interfaces";
+import { ClientUpdate } from "../home/pages/client/interfaces/client.interfaces";
 
 export const ToolBar = () => {
     const { client, updateClient } = useClient();
@@ -26,7 +26,8 @@ export const ToolBar = () => {
 
     const handleCloseEditDialog = async (values: ClientUpdate) => {
         setOpeneditDialog(false);
-        
+        handleClose();
+
         if(!values) return;
 
         await updateClient(values)
@@ -73,7 +74,7 @@ export const ToolBar = () => {
                 <MenuItem onClick={handleEditCLient}>Editar</MenuItem>
             </Menu>
 
-            <ClientDialog open={openEditDialog} onClose={handleCloseEditDialog}/>
+            <ClientDialog open={openEditDialog} onClose={handleCloseEditDialog} clientSelected={client}/>
 
         </Box>
 

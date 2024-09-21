@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ClientLogin } from "../../../interfaces/client.interfaces";
+import { ClientLogin } from "../../home/pages/client/interfaces/client.interfaces";
 import { login } from "../services/auth";
 import { useClient } from "../../hooks/useClient";
 

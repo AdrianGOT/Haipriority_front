@@ -6,7 +6,7 @@ import { useLoan } from "./hooks/useLoan";
 import { useInitLoan } from "./hooks/useInitLoan";
 import { useEffect, useState } from "react";
 import { useClient } from "../../../hooks/useClient";
-import { ROLES } from "../../../../interfaces/client.interfaces";
+import { ROLES } from "../client/interfaces/client.interfaces";
 import getIndividualLoan from "./components/IndividualLoan";
 import getIndividualInitLoan from "./components/IndividualInitLoan";
 import "./loans.css"
