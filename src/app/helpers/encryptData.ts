@@ -1,11 +1,3 @@
-import JSEncrypt from "jsencrypt"
-
-export const encryptData = (data: string, publicKey: string) =>{
-    const jsEncrypt = new JSEncrypt();
-    jsEncrypt.setPublicKey( publicKey )
-    return jsEncrypt.encrypt(data);
-}
-
 export const encryptDataV2 = async (data: string, publicKey: string) => {
     const pKey = await importPublicKey(publicKey);
     const encoder = new TextEncoder();

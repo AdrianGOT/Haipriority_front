@@ -39,9 +39,8 @@ const Clients = () => {
         console.log("handleDeleteClient");
     }
 
-    const handleEditClient = () => {
-      setOpenEditDialog(true);      
-    } 
+    const handleEditClient = () => setOpenEditDialog(true);      
+    
 
     const handleCloseEditDialog = async(clientInfo: ClientUpdate) => {
       setOpenEditDialog(false);
@@ -50,13 +49,9 @@ const Clients = () => {
         const passwordEncrypted = await encryptDataV2(clientInfo.password!, publicKey);
         clientInfo.password = passwordEncrypted;  
       }
-      console.log(clientInfo);
       
-      const clientId = "id" in clientInfo? clientInfo["id"] : 0;
-      
+      const clientId = "id" in clientInfo? clientInfo["id"] : 0;      
       updateClient(clientInfo, clientId as number)
-      
-
     }
 
     const toggleclientState = (clientId: number, stateTo: boolean) => {

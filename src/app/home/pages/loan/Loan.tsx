@@ -12,13 +12,13 @@ import getIndividualInitLoan from "./components/IndividualInitLoan";
 import "./loans.css"
 
 
-export type TabTypes = "creditCard" | "card";
+export type TabTypes = "loans" | "init_loans";
 
 
 const Loan = () => {
     const { loans, getClientLoans } = useLoan();
     const { initLoans, getInitLoans} = useInitLoan();
-    const [ pageSelected, setPageSelected ] = useState<TabTypes>("creditCard");
+    const [ pageSelected, setPageSelected ] = useState<TabTypes>("loans");
     const { client } = useClient();
 
     useEffect(()=> {
@@ -31,7 +31,7 @@ const Loan = () => {
     }, [])
 
     useEffect(() => {
-        const page =loans.length > 0? "creditCard" : "card";
+        const page =loans.length > 0? "loans" : "init_loans";
         setPageSelected(page);
     },[loans])
 
@@ -42,8 +42,8 @@ const Loan = () => {
     }
     
     const tabPadding = {
-        card: pageSelected === "card"? "24px": "0px",
-        creditCard : pageSelected === "creditCard"? "24px": "0px"
+        card: pageSelected === "init_loans"? "24px": "0px",
+        creditCard : pageSelected === "loans"? "24px": "0px"
     }
 
     return (
@@ -53,13 +53,13 @@ const Loan = () => {
                         onChange={handleChange} 
                         variant="fullWidth"
                         aria-label="lab API tabs example">
-                        <Tab label="Mis tarjetas" value="creditCard" />
-                        <Tab label="Disponibles" value="card" />
+                        <Tab label="Mis prestamos" value="loans" />
+                        <Tab label="Prestamos disponibles" value="init_loans" />
                     </TabList>
                 </Box>
                 
                 <TabPanel 
-                    value="creditCard" 
+                    value="loans" 
                     className="tab-container" 
                     sx={{ padding: tabPadding.creditCard }}>
                     
@@ -69,7 +69,7 @@ const Loan = () => {
 
                 </TabPanel>
                 <TabPanel 
-                    value="card" 
+                    value="init_loans" 
                     className="tab-container"
                     sx={{  padding: tabPadding.card,  }} >
                     
