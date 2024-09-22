@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useLoan } from "./hooks/useLoan";
 import { useInitLoan } from "./hooks/useInitLoan";
 import { useEffect, useState } from "react";
-import { useClient } from "../../../hooks/useClient";
+import { useGeneral } from "../../../hooks/useGeneral";
 import { ROLES } from "../client/interfaces/client.interfaces";
 import getIndividualLoan from "./components/IndividualLoan";
 import getIndividualInitLoan from "./components/IndividualInitLoan";
@@ -19,7 +19,7 @@ const Loan = () => {
     const { loans, getClientLoans } = useLoan();
     const { initLoans, getInitLoans} = useInitLoan();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("loans");
-    const { client } = useClient();
+    const { client } = useGeneral();
 
     useEffect(()=> {
         setTimeout(async () => {            

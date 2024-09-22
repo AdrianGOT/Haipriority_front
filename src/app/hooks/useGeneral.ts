@@ -1,20 +1,24 @@
 import { useContext } from "react"
-import { ClientContext } from "../../context/client"
+import { GeneralContext } from "../../context/general"
 
-export const useClient = () => {
+export const useGeneral = () => {
     const {
         logout,
         client, 
         setClient,
+        privateKey,
         updateClient,
+        generateKeyToSend,
         getClientInfoByToken
-    } = useContext(ClientContext);
+    } = useContext(GeneralContext);
     
     return {
         client, 
         logout,
         setClient,
+        privateKey,
         updateClient,
+        generateKeyToSend,
         getClientInfoByToken,
     }
 }

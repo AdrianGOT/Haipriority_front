@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material"
 import { useForm } from "react-hook-form";
-import { useClient } from "../../../../hooks/useClient";
+import { useGeneral } from "../../../../hooks/useGeneral";
 import { useEffect } from "react";
 import { generateDateToString } from "../../../../helpers/dateHelper";
 import { CreditCard } from "../interfaces/creditCard";
@@ -15,7 +15,7 @@ export interface SimpleDialogProps {
 
 export const CreationCardDialog = (props: SimpleDialogProps) => {
     const { onClose, open, card } = props;
-    const { client } = useClient();
+    const { client } = useGeneral();
     const {
         register, 
         handleSubmit, 

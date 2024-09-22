@@ -5,18 +5,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useClients } from './hooks/useClients';
+import { useClients } from '../client/hooks/useClients';
 import { generateDateToString } from '../../../helpers/dateHelper';
-import { Box, Button, Chip, IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-import { useClient } from '../../../hooks/useClient';
+import { Chip, IconButton } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { ClientDialog } from '../../components/ClientDialog';
-import { ClientUpdate, InitClient } from './interfaces/client.interfaces';
+import { ClientUpdate } from './interfaces/client.interfaces';
 import { encryptDataV2 } from '../../../helpers/encryptData';
 import { useKey } from '../../../auth/hooks/useKey';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { useGeneral } from '../../../hooks/useGeneral';
 
 const Clients = () => {
     const { 
@@ -26,7 +26,7 @@ const Clients = () => {
       toggleState,
 
      } = useClients();
-    const { client } = useClient();
+    const { client } = useGeneral();
     const { publicKey } = useKey();
     const [openEditDialog, setOpenEditDialog] = useState(false);
 
@@ -59,13 +59,13 @@ const Clients = () => {
     }
 
 
-    const clientDefaultValues: InitClient = {
-      id: 0,
-      name: '',
-      email: '',
-      roles: [],
-      phoneNumber: ''
-    }
+    // const clientDefaultValues: InitClient = {
+    //   id: 0,
+    //   name: '',
+    //   email: '',
+    //   roles: [],
+    //   phoneNumber: ''
+    // }
 
     return(
      <>

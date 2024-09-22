@@ -1,4 +1,4 @@
-import { useClient } from "../app/hooks/useClient";
+import { useGeneral } from "../app/hooks/useGeneral";
 import { ROLES } from "../app/home/pages/client/interfaces/client.interfaces";
 
 // Funtion check token
@@ -10,6 +10,7 @@ export const validaToken = (): boolean => {
 }
 
 export const validateRole = (roles: ROLES[]): boolean => {
-    const { client } = useClient();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { client } = useGeneral();
     return client.roles.some(role =>roles.includes(role)) ;
 }

@@ -3,14 +3,17 @@ import { ClientUpdate, InitClient } from "../app/home/pages/client/interfaces/cl
 import { clientCheck } from "../services/client";
 import { updateClient as updateC } from "../services/client";
 import toast from "react-hot-toast";
+import { generatePairKey } from "../app/helpers/encryptData";
 
 
-interface ClientContext {
+interface GeneralContext {
     client               : InitClient,
     logout               : () => void
     setClient            : (client: InitClient) => void
+    privateKey           : string,
     updateClient         : (clientInfo: ClientUpdate) => void
-    getClientInfoByToken : () => void
+    getClientInfoByToken : () => void,
+    generateKeyToSend    : () => Promise<string | undefined>,
 }
 
 const clientDefault = {
@@ -24,19 +27,23 @@ const clientDefault = {
 }
 
 
-const initialValues: ClientContext = {
-    client               : clientDefault,
-    logout               : () => {},
-    setClient            : (client: InitClient) => {},
-    updateClient         : () => {},
-    getClientInfoByToken : async() => {},
-    
+const initialValues: GeneralContext = {
+    client: clientDefault,
+    privateKey: "",
+    logout: () => { },
+    setClient: () => { },
+    updateClient: () => { },
+    getClientInfoByToken: async () => { },
+    generateKeyToSend: (): Promise<string | undefined> => {
+        throw new Error("Function not implemented.");
+    }
 }
 
-export const ClientContext = createContext<ClientContext>(initialValues);
+export const GeneralContext = createContext<GeneralContext>(initialValues);
 
-export function ClientProvider({children}: React.PropsWithChildren){
+export function GeneralProvider({children}: React.PropsWithChildren){
     const [client, setClient] = useState<InitClient>(clientDefault);
+    const [keys, setKeys] = useState({privateKey: "", publicKey: ""});
 
     const getClientInfoByToken = async() => {
 
@@ -61,16 +68,33 @@ export function ClientProvider({children}: React.PropsWithChildren){
         
     }
 
+    const generateKeyToSend = async () => {
+        if(keys.privateKey) return;
+
+        const keysBase64 = await generatePairKey();
+        
+        setKeys({
+            privateKey: keysBase64.privateKeyBase64,
+            publicKey: keysBase64.publicKeyBase64 
+        })
+
+        console.log(keysBase64);
+        
+        return keysBase64.publicKeyBase64;
+    }
+
     return (
-        <ClientContext.Provider value={{
+        <GeneralContext.Provider value={{
             getClientInfoByToken,
+            generateKeyToSend,
+            updateClient,
             setClient,
             logout,
-            updateClient,
+            privateKey: keys.privateKey,
             client,
         }}>    
             {children}
-        </ClientContext.Provider>
+        </GeneralContext.Provider>
     )
     
 }

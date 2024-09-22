@@ -2,10 +2,10 @@ import { Box, Button, List, ListItemButton, ListItemText } from "@mui/material";
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { useMainInfo } from "../home/hooks/useMenuInfo";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useClient } from "../hooks/useClient";
+import { useGeneral } from "../hooks/useGeneral";
 
 const SideNav = () => {
-    const { logout } = useClient();
+    const { logout } = useGeneral();
     const navigate = useNavigate();
     const location = useLocation();
     const { menuList, setMenuList } = useMainInfo(location.pathname);

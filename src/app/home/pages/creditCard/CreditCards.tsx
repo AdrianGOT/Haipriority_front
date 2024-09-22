@@ -7,7 +7,7 @@ import getIndividualCreditCard from "./components/IndividualCreditCard";
 import getIndividualCard from "./components/IndividualCard";
 import AddIcon from '@mui/icons-material/Add';
 import { useCards } from "./hooks/useCards";
-import { useClient } from "../../../hooks/useClient";
+import { useGeneral } from "../../../hooks/useGeneral";
 import { ROLES } from "../client/interfaces/client.interfaces";
 
 import "./creditCard.css";
@@ -18,7 +18,7 @@ const CreditCards = () => {
     const { creditCards, getClientCredictCards } = useCreditCard();
     const { cards, getCardList } = useCards();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("creditCard");
-    const { client } = useClient();
+    const { client } = useGeneral();
     console.log(creditCards);
     
     useEffect(()=> {

@@ -1,11 +1,11 @@
 import { Avatar, Box, IconButton, Menu, MenuItem } from "@mui/material"
-import { useClient } from "../hooks/useClient"
+import { useGeneral } from "../hooks/useGeneral"
 import { useState } from "react";
 import { ClientDialog } from "../home/components/ClientDialog";
 import { ClientUpdate } from "../home/pages/client/interfaces/client.interfaces";
 
 export const ToolBar = () => {
-    const { client, updateClient } = useClient();
+    const { client, updateClient } = useGeneral();
     const [ openMenu, setOpenMenu ] = useState<boolean>(false);
     const [ anchorEl, setAnchorEl ] = useState<null | HTMLElement>(null);
     const [ openEditDialog, setOpeneditDialog ] = useState(false); 

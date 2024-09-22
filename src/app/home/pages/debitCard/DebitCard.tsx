@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCards } from "./hooks/useCard";
 import { useDebitCard } from "./hooks/useDebitCard";
-import { useClient } from "../../../hooks/useClient";
+import { useGeneral } from "../../../hooks/useGeneral";
 import { ROLES } from "../client/interfaces/client.interfaces";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Button, Tab } from "@mui/material";
@@ -19,7 +19,7 @@ const DebitCard = () => {
     const { debitCards, getClientDebitCards } = useDebitCard();
     const { cards, getCardList } = useCards();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("debitCard");
-    const { client } = useClient();
+    const { client } = useGeneral();
 
     useEffect(()=> {
         setTimeout(async () => {

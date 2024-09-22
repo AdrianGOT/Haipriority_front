@@ -1,5 +1,5 @@
 import { Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
-import { useClient } from "../../hooks/useClient";
+import { useGeneral } from "../../hooks/useGeneral";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Client, InitClient, ROLES } from "../pages/client/interfaces/client.interfaces";
@@ -16,7 +16,7 @@ export interface SimpleDialogProps {
 
 export const ClientDialog = (props: SimpleDialogProps) => {
     const { open, onClose, clientSelected} = props;
-    const { client } = useClient();
+    const { client } = useGeneral();
     const createMode = clientSelected.id === 0;
 
     

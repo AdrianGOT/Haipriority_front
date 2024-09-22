@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { ClientLogin } from "../../home/pages/client/interfaces/client.interfaces";
 import { login } from "../services/auth";
-import { useClient } from "../../hooks/useClient";
+import { useGeneral } from "../../hooks/useGeneral";
 
 export const useLoginFetch = (data: ClientLogin | null) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [ finishMsg, setFinishMsg ] = useState<string>("");
-    const { setClient } = useClient();
+    const { setClient } = useGeneral();
 
     
     useEffect(()=> {

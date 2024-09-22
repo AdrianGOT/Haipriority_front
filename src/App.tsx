@@ -8,13 +8,13 @@ import { Toaster } from 'react-hot-toast';
 import './App.css';
 import { validaToken } from './middleware/validateToken';
 import { lazy, Suspense } from 'react';
-import { ClientProvider } from './context/client';
+import { GeneralProvider } from './context/general';
 import { CreditcardsProvider } from './app/home/pages/creditCard/context/creditCard';
 import { DebitCardProvider } from './app/home/pages/debitCard/context/debitCard';
 import { LoanProvider } from './app/home/pages/loan/context/loan';
 
 
-const MainPage = lazy(()=> import('./app/home/main'));
+const MainPage = lazy(()=> import('./app/home/MainPage'));
 const LoginComponent = lazy(()=> import('./app/auth/pages/Login'));
 const RegisterComponent = lazy(()=> import('./app/auth/pages/Register'));
 
@@ -28,7 +28,7 @@ function App() {
   
   return (
     <>
-      <ClientProvider>
+      <GeneralProvider>
         <BrowserRouter>
           <Routes>
 
@@ -81,7 +81,7 @@ function App() {
 
           </Routes>
         </BrowserRouter>
-      </ClientProvider>
+      </GeneralProvider>
 
       <div>
         <Toaster position="top-center"/>
