@@ -10,15 +10,15 @@ import {
 import {
     getInitLoans as getIloans
 } from "../services/loanInit"
-import { InitLoan, LoanToCreate } from "../interfaces/loan";
+import { InitLoan, LoanComplete, LoanToCreate } from "../interfaces/loan";
 
 interface LoanContext {
-    loans          : any[];
-    initLoans      : any[];
+    loans          : LoanComplete[];
+    initLoans      : InitLoan[];
     getClientLoans : () => void;
     getInitLoans   : () => void;
     createLoan     : (loanInfo: LoanToCreate, initLoan: InitLoan) => void;
-    updateLoan     : (loanInfo: any, loan: number) => void;
+    updateLoan     : (loanInfo: LoanToCreate, loan: number) => void;
     deleteLoan     : (loanId: number) => void;
 
 }
@@ -37,12 +37,13 @@ const initialValues: LoanContext = {
 export const LoanContext = createContext(initialValues);
 
 export const LoanProvider = ({children}: React.PropsWithChildren) => {
-    const [loans, setLoans] = useState<any[]>([]);
-    const [initLoans, setInitLoans] = useState<any[]>([]);
+    const [loans, setLoans] = useState<LoanComplete[]>([]);
+    const [initLoans, setInitLoans] = useState<InitLoan[]>([]);
 
     const getClientLoans = async () => {    
         const loanResponse = await getLoans();
         if(!loanResponse.ok) return;
+        
         setLoans(loanResponse.loans)
     }
 
@@ -52,13 +53,14 @@ export const LoanProvider = ({children}: React.PropsWithChildren) => {
         setInitLoans(loanResponse.loans)
     }
 
-    const createLoan = async (loanInfo: LoanToCreate, initLoan: any) => {
+    const createLoan = async (loanInfo: LoanToCreate, initLoan: InitLoan) => {
 
         const loanResponse = await createL(loanInfo);
 
         if(!loanResponse.ok) return;
     
         toast.success(loanResponse.msg);
+        
         setLoans(prevLoans => [...prevLoans, {
             ...loanResponse.loan,
             loan_init: initLoan

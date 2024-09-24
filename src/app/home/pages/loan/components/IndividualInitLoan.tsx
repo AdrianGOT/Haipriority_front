@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, Tooltip, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import { getPriceFormatted } from "../../../../helpers/transforCardInfo";
 import { useLoan } from "../hooks/useLoan";
@@ -22,13 +22,11 @@ const IndividualInitLoan = ({info}: Prop) => {
       }
 
       const handleCloseDialog = async (value: {current_amount: number, limitDate: number}) => {
-        if(value) {
-            console.log(value);
-            
+        if(value) {   
             const loanToCreate: LoanToCreate = {
               loanId: info.id,
               current_amount: value.current_amount,
-              limitDate: generateYearLimitInDate(value.limitDate)
+              limitDate: generateYearLimitInDate(Number(value.limitDate))
             }
             
             await createLoan(loanToCreate, info);
@@ -77,6 +75,6 @@ const IndividualInitLoan = ({info}: Prop) => {
     )
 }
 
-export default function getIndividualInitLoan( data: any ){
-    return <IndividualInitLoan info={data} key={`${data.id}${data.type}${data.franchise}`} />
+export default function getIndividualInitLoan( data: InitLoan ){
+    return <IndividualInitLoan info={data} key={`${data.id}${data.title}${data.interest}`} />
 }

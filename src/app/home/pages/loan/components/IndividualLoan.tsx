@@ -7,6 +7,8 @@ import { LoanDialog } from "./LoanDialog"
 import { getPriceFormatted } from "../../../../helpers/transforCardInfo"
 import { useLoan } from "../hooks/useLoan"
 import { LoanComplete, LoanToCreate } from "../interfaces/loan";
+import { useGeneral } from "../../../../hooks/useGeneral";
+import { ROLES } from "../../client/interfaces/client.interfaces";
 
 interface Prop{
     info: LoanComplete
@@ -14,15 +16,17 @@ interface Prop{
 
 
 const IndividualLoan = ({info}: Prop) => {
-    console.log(info);
     
     const { deleteLoan, updateLoan } = useLoan();
+    const { client } = useGeneral();
+
     const [ anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [ openEditDialog, setOpenEditDialog ] = useState(false);
     
     const dateFormated = generateDateToString(new Date(info.limitDate));
     const amountAllowedFormated = getPriceFormatted(info.loan_init.amountAllowed);
     const currentAmountFormated = getPriceFormatted(info.current_amount);
+    const isAdmin = client.roles.some(role => role === ROLES.admin);
 
     const open = Boolean(anchorEl);
 
@@ -63,7 +67,7 @@ const IndividualLoan = ({info}: Prop) => {
             <div className="loan-container">
                 <div className="loan-container__header">
                     <div className="first-line">
-                        <strong>{info.loan_init.title}</strong>
+                        <strong>{info.loan_init.title} </strong> <span>{ isAdmin &&  info.client.name}</span>
                     </div>
                     <IconButton 
                         id="menu-button"
@@ -120,6 +124,6 @@ const IndividualLoan = ({info}: Prop) => {
     )
 }
 
-export default function getIndividualLoan(data: any){
-    return <IndividualLoan info={data} key={`${data.id}`}/>
+export default function getIndividualLoan(data: LoanComplete){
+    return <IndividualLoan info={data} key={`${data.id}${data.createdAt}`}/>
 }

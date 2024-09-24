@@ -8,6 +8,8 @@ export const generateDateToString = (date?: Date) => {
 }   
 
 export const generateYearLimitInDate = (years : number): Date => {
+    
     const currentDate = new Date();
-    return new Date(currentDate.getFullYear() + years, 1, 1);
+    const newYear = Number(currentDate.getFullYear()) + years;
+    return new Date(newYear, 1, 1);
 }

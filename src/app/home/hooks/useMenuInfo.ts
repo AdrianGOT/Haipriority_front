@@ -11,7 +11,8 @@ export const useMainInfo = (path: string) => {
 
         const getMenuInfo = async() => {
             const data = await getMainInfo();
-            setMenuList(data.menuList);
+
+            setMenuList(getActiveRoute( data.menuList ));
         }
 
         getMenuInfo();
@@ -20,14 +21,17 @@ export const useMainInfo = (path: string) => {
 
     useEffect(()=>{
         if( path === "/" ) return;
-        
-        setMenuList(prevList => (
-            prevList.map(item => {      
+        setMenuList( getActiveRoute(menuList) );
+       
+    }, [path])
+
+    const getActiveRoute = (itemList: ItemList[]) => {
+        return itemList.map(item => {      
                 item.selected = path.includes(item.path); 
                 return item;
-            })
-        ))
-    }, [path])
+            }
+        )
+    }
 
     return {
         menuList,
