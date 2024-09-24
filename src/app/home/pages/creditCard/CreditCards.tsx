@@ -1,6 +1,6 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useCreditCard } from "./hooks/useCreditCard";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Tab } from "@mui/material";
 import { CardList } from "../../components/CardList";
 import getIndividualCreditCard from "./components/IndividualCreditCard";
@@ -18,25 +18,29 @@ const CreditCards = () => {
     const { creditCards, getClientCredictCards } = useCreditCard();
     const { cards, getCardList } = useCards();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("creditCard");
-    const { client } = useGeneral();
-    console.log(creditCards);
+    const { client } = useGeneral();    
     
     useEffect(()=> {
-        setTimeout(async () => {
-            await Promise.all([
-                getClientCredictCards() , getCardList()
-            ])
-        })
+        const getAllInfo = async() => {
+            await (Promise.all([
+                    getClientCredictCards() , getCardList()
+            ]))
+        }
+        
+        getAllInfo();
     }, [])
 
     useEffect(() => {
-        const page =creditCards.length > 0? "creditCard" : "card";
+        if(cards.length === 0) return;
+        const page =creditCards.length > 0? "creditCard" : "card"; 
         setPageSelected(page);
-    },[creditCards])
+    },[creditCards, cards])
 
-    const showAddCardButton = client.roles.some(role => ROLES.admin === role);
+    const showAddCardButton = useMemo(() => 
+        client.roles.some(role => ROLES.admin === role)
+    , []);
 
-    const handleChange = (_: any, page: TabTypes) => {
+    const handleChange = (event: React.SyntheticEvent, page: TabTypes) => {
         setPageSelected(page);
     }
     

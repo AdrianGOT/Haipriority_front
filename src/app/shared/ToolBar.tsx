@@ -1,14 +1,18 @@
-import { Avatar, Box, IconButton, Menu, MenuItem } from "@mui/material"
+import { Box, IconButton, Menu, MenuItem } from "@mui/material"
 import { useGeneral } from "../hooks/useGeneral"
 import { useState } from "react";
 import { ClientDialog } from "../home/components/ClientDialog";
 import { ClientUpdate } from "../home/pages/client/interfaces/client.interfaces";
+import { useKey } from "../auth/hooks/useKey";
+import { encryptDataV2 } from "../helpers/encryptData";
 
 export const ToolBar = () => {
     const { client, updateClient } = useGeneral();
     const [ openMenu, setOpenMenu ] = useState<boolean>(false);
     const [ anchorEl, setAnchorEl ] = useState<null | HTMLElement>(null);
     const [ openEditDialog, setOpeneditDialog ] = useState(false); 
+    const { publicKey } = useKey();
+
 
 
     const initials = client?.name.split(" ")
@@ -27,6 +31,11 @@ export const ToolBar = () => {
     const handleCloseEditDialog = async (values: ClientUpdate) => {
         setOpeneditDialog(false);
         handleClose();
+
+        if("password" in values){
+            const passwordEncrypted = await encryptDataV2(values.password!, publicKey);
+            values.password = passwordEncrypted;  
+        }
 
         if(!values) return;
 

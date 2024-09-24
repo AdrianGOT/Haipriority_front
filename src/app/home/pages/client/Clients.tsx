@@ -44,8 +44,11 @@ const Clients = () => {
 
     const handleCloseEditDialog = async(clientInfo: ClientUpdate) => {
       setOpenEditDialog(false);
+      console.log(clientInfo);
       
       if("password" in clientInfo){
+        console.log("publicKey ==> ", publicKey);
+        
         const passwordEncrypted = await encryptDataV2(clientInfo.password!, publicKey);
         clientInfo.password = passwordEncrypted;  
       }

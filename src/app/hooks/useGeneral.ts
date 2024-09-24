@@ -3,22 +3,24 @@ import { GeneralContext } from "../../context/general"
 
 export const useGeneral = () => {
     const {
+        iv,
         logout,
         client, 
+        secretKey,
         setClient,
-        privateKey,
         updateClient,
-        generateKeyToSend,
+        getKeyToDecode,
         getClientInfoByToken
     } = useContext(GeneralContext);
     
     return {
+        iv,
         client, 
         logout,
         setClient,
-        privateKey,
+        secretKey,
         updateClient,
-        generateKeyToSend,
+        getKeyToDecode,
         getClientInfoByToken,
     }
 }

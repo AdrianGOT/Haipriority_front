@@ -1,8 +1,6 @@
 import api from "../lib/customInterceptor";
 
-export const sendPublicKey = (publicKey: string) =>{
-    console.log('publicKey ==>', publicKey);
-       
+export const getSecretKey = () =>{
     const urlComplement = "/config";
-    return api.post(urlComplement, {publicKey});
+    return api.get(urlComplement);
 }

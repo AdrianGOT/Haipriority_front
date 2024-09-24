@@ -15,6 +15,8 @@ const Login = () => {
     const [data, setData] = useState<ClientLogin | null>(null);
     const { loading, finishMsg } = useLoginFetch(data);
     const { publicKey } = useKey();
+    console.log("@");
+    
 
     useEffect(()=> {
         if(!finishMsg) return;

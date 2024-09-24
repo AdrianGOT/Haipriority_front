@@ -9,6 +9,11 @@ import {
 } from "../services/creditCard";
 import toast from "react-hot-toast";
 import { getCards } from "../services/card";
+import { useGeneral } from "../../../../hooks/useGeneral";
+
+
+import naclUtil from 'tweetnacl-util';
+import { decodeMessage } from "../../../../helpers/encryptData";
 
 interface CardsContext {
   cards                  : Card[],
@@ -37,6 +42,7 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
 
     const [ cards, setCards] = useState<Card[]>([]);
     const [ creditCards, setCreditCards] = useState<CreditCard[]>([]);
+    const { secretKey , iv} = useGeneral();
     
     const createNewCreditCard = async (cardInfo: CreditCardInit, cardBase: Card) => {
     
@@ -61,8 +67,39 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
     }
 
     const getClientCredictCards = async() =>{
-        const creditCards = await getCreditCards();
-        setCreditCards(creditCards.cards);
+        const creditCardResponse = await getCreditCards();
+        
+        if(!creditCardResponse.ok) return;
+        
+        const _cards = creditCardResponse.cards as CreditCard[];        
+        const newCardList = await decodeCreditCardData(_cards);
+        console.log(creditCardResponse.cards);
+        
+        setCreditCards( newCardList );
+    }
+
+    const decodeCreditCardData = async (encrypCards: CreditCard[]) => {
+        const newCardList: CreditCard[] = [];
+
+        
+        const ivBytes = naclUtil.decodeBase64(iv);
+        const secretKeyBytes = naclUtil.decodeBase64(secretKey);
+
+        
+        for(const card of encrypCards){
+
+            const numberdecoded = decodeMessage(card.number, ivBytes, secretKeyBytes);
+            const cvcdecoded = decodeMessage(`${card.cvc}`, ivBytes, secretKeyBytes);
+
+            newCardList.push(
+                {
+                    ...card,
+                    cvc: Number(cvcdecoded),
+                    number: numberdecoded,
+                }
+            )            
+        }
+        return newCardList;
     } 
 
     const deleteCC = async(cardId: number) => {

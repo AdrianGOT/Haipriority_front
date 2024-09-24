@@ -3,17 +3,23 @@ import { ClientUpdate, InitClient } from "../app/home/pages/client/interfaces/cl
 import { clientCheck } from "../services/client";
 import { updateClient as updateC } from "../services/client";
 import toast from "react-hot-toast";
-import { generatePairKey } from "../app/helpers/encryptData";
+import { getSecretKey } from "../services/general";
 
 
 interface GeneralContext {
+    iv                   : string
     client               : InitClient,
     logout               : () => void
     setClient            : (client: InitClient) => void
-    privateKey           : string,
     updateClient         : (clientInfo: ClientUpdate) => void
     getClientInfoByToken : () => void,
-    generateKeyToSend    : () => Promise<string | undefined>,
+    getKeyToDecode       : () => void
+    secretKey            : string
+}
+
+interface keypair {
+    secretKey: string,
+    iv: string
 }
 
 const clientDefault = {
@@ -28,13 +34,14 @@ const clientDefault = {
 
 
 const initialValues: GeneralContext = {
+    iv: "",
     client: clientDefault,
-    privateKey: "",
     logout: () => { },
     setClient: () => { },
+    secretKey: "",
     updateClient: () => { },
     getClientInfoByToken: async () => { },
-    generateKeyToSend: (): Promise<string | undefined> => {
+    getKeyToDecode: () => {
         throw new Error("Function not implemented.");
     }
 }
@@ -43,8 +50,9 @@ export const GeneralContext = createContext<GeneralContext>(initialValues);
 
 export function GeneralProvider({children}: React.PropsWithChildren){
     const [client, setClient] = useState<InitClient>(clientDefault);
-    const [keys, setKeys] = useState({privateKey: "", publicKey: ""});
+    const [keys, setKeys] = useState<keypair>({secretKey: "", iv: ""});
 
+    
     const getClientInfoByToken = async() => {
 
         const clientResponse = await clientCheck();
@@ -68,30 +76,24 @@ export function GeneralProvider({children}: React.PropsWithChildren){
         
     }
 
-    const generateKeyToSend = async () => {
-        if(keys.privateKey) return;
-
-        const keysBase64 = await generatePairKey();
-        
+    const getKeyToDecode = async () => {
+        const secretResponse = await getSecretKey()
         setKeys({
-            privateKey: keysBase64.privateKeyBase64,
-            publicKey: keysBase64.publicKeyBase64 
+            secretKey: secretResponse.data.secretKey,
+            iv: secretResponse.data.iv
         })
-
-        console.log(keysBase64);
-        
-        return keysBase64.publicKeyBase64;
     }
 
     return (
         <GeneralContext.Provider value={{
             getClientInfoByToken,
-            generateKeyToSend,
+            getKeyToDecode,
             updateClient,
             setClient,
             logout,
-            privateKey: keys.privateKey,
+            secretKey: keys.secretKey,
             client,
+            iv: keys.iv
         }}>    
             {children}
         </GeneralContext.Provider>
