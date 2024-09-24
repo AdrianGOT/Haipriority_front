@@ -10,10 +10,9 @@ import {
 import toast from "react-hot-toast";
 import { getCards } from "../services/card";
 import { useGeneral } from "../../../../hooks/useGeneral";
+import { decodeCardData, decodeOneCard } from "../../../../helpers/encryptData";
 
 
-import naclUtil from 'tweetnacl-util';
-import { decodeMessage } from "../../../../helpers/encryptData";
 
 interface CardsContext {
   cards                  : Card[],
@@ -47,8 +46,11 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
     const createNewCreditCard = async (cardInfo: CreditCardInit, cardBase: Card) => {
     
         const creditCard = await createCC(cardInfo);
+
+        const cardDecoded = decodeOneCard<CreditCard>(creditCard.card, secretKey, iv);
+
         const newCreditCard: CreditCard = {
-            ...creditCard.card, 
+            ...cardDecoded, 
             card: cardBase
         }
         
@@ -72,35 +74,11 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
         if(!creditCardResponse.ok) return;
         
         const _cards = creditCardResponse.cards as CreditCard[];        
-        const newCardList = await decodeCreditCardData(_cards);
-        console.log(creditCardResponse.cards);
+        const newCardList = await decodeCardData(_cards, secretKey, iv);
         
-        setCreditCards( newCardList );
+        setCreditCards( newCardList as CreditCard[] );
     }
 
-    const decodeCreditCardData = async (encrypCards: CreditCard[]) => {
-        const newCardList: CreditCard[] = [];
-
-        
-        const ivBytes = naclUtil.decodeBase64(iv);
-        const secretKeyBytes = naclUtil.decodeBase64(secretKey);
-
-        
-        for(const card of encrypCards){
-
-            const numberdecoded = decodeMessage(card.number, ivBytes, secretKeyBytes);
-            const cvcdecoded = decodeMessage(`${card.cvc}`, ivBytes, secretKeyBytes);
-
-            newCardList.push(
-                {
-                    ...card,
-                    cvc: Number(cvcdecoded),
-                    number: numberdecoded,
-                }
-            )            
-        }
-        return newCardList;
-    } 
 
     const deleteCC = async(cardId: number) => {
         const cardDeleted = await deleteCreditCard(cardId);
@@ -123,16 +101,17 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
 
         toast.success(creditCardUpdated.msg);
 
+        const cardDecoded = decodeOneCard<CreditCard>(creditCardUpdated.card, secretKey, iv);
+        
         setCreditCards( prevCCards => 
             prevCCards.map(card => 
-                card.id === cardId? creditCardUpdated.card : card
+                card.id === cardId? cardDecoded : card
             ) 
         )
 
     }
     
-
-
+    // ======================== 
 
     const getCardList = async() => {
         const cards = await getCards();

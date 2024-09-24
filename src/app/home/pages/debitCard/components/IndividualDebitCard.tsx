@@ -1,17 +1,14 @@
-import { Box, Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Typography } from "@mui/material"
-// import { CreatingCard, CreditCard } from "../interfaces/creditCard"
+import { IconButton, Menu, MenuItem } from "@mui/material"
 import { VisaIcon } from "../../../components/icons/VisaIcon"
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon"
 import { generateDateToString } from "../../../../helpers/dateHelper"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from "react"
-// import { useCreditCard } from "../hooks/useCreditCard"
 import { CreationCardDialog } from "./DebitCardDialog"
 import { useDebitCard } from "../hooks/useDebitCard";
 import { getPriceFormatted } from "../../../../helpers/transforCardInfo";
 import { DebitCard, DebitCardComplete } from "../interfaces/debitCard";
-import { updateCreditCard } from "../../creditCard/services/creditCard";
-import { updateDebitCard } from "../services/debitCard";
+
 
 interface Prop{
     info: DebitCardComplete
@@ -24,7 +21,7 @@ const IndividualDebitCard = ({info}: Prop) => {
     const [ anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
-    const getAnSpace = ( index : number) => (index !== 0 && index % 4 === 0)? " " : "";  
+    const getAnSpace = ( index : number) => (index !== 0 && [3,7,11].some(n =>index === n ) )? " " : "";  
     const numberFormated = info.number.split("").reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
     const franchiseIcon = info?.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
     const dateFormated = generateDateToString(new Date(info.expirationDate));
@@ -56,7 +53,7 @@ const IndividualDebitCard = ({info}: Prop) => {
             current_amount: 0
         }
         
-        await updatingDebitCard(cardToUpdate, info.id);
+        updatingDebitCard(cardToUpdate, info.id);
     }
 
     return (

@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Typography } from "@mui/material"
+import { IconButton, Menu, MenuItem } from "@mui/material"
 import { CreatingCard, CreditCard } from "../interfaces/creditCard"
 import { VisaIcon } from "../../../components/icons/VisaIcon"
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon"
@@ -20,7 +20,7 @@ const IndividualCreditCard = ({info}: Prop) => {
     const [ anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [ openEditDialog, setOpenEditDialog ] = useState(false);
     
-    const getAnSpace = ( index : number) => (index !== 0 && index % 4 === 0)? " " : "";  
+    const getAnSpace = ( index : number) => (index !== 0 && [3,7,11].some(n =>index === n ) )? " " : "";  
     const franchiseIcon = info?.card.franchise === "VISA"? <VisaIcon/>: <MasterCardIcon/>
     const numberFormated = info.number.split("").reduce((preV, currV, index) => `${preV}${currV}${getAnSpace(index)}`,"")
     const dateFormated = generateDateToString(new Date(info.expirationDate));

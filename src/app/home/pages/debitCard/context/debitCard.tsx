@@ -9,13 +9,17 @@ import {
     getCards
 } from "../services/card";
 import toast from "react-hot-toast";
+import { Card } from "../interfaces/card";
+import { DebitCard, DebitCardComplete } from "../interfaces/debitCard";
+import { useGeneral } from "../../../../hooks/useGeneral";
+import { decodeCardData, decodeOneCard } from "../../../../helpers/encryptData";
 
 interface DCardContext {
-    cards               : any[];
-    debitCards           : any[];
+    cards               : Card[];
+    debitCards          : DebitCardComplete[];
     getClientDebitCards : () => void;
-    updatingDebitCard   : (debitCardInfo: any, cardId: number) => void;
-    createDebitCard     : (debitCardInfo: any, cardBase: any) => void;
+    updatingDebitCard   : (debitCardInfo: DebitCard, cardId: number) => void;
+    createDebitCard     : (debitCardInfo: DebitCard, cardBase: Card) => void;
     deleteDebitCard     : (cardId: number) => void;
     getCardList         : () => void;
 }
@@ -33,37 +37,51 @@ const initialValues: DCardContext = {
 export const DebitCardContext = createContext(initialValues);
 
 export const DebitCardProvider = ({children}: React.PropsWithChildren) => {
-    const [cards, setCards] = useState<any[]>([]);
-    const [debitCards, setDebitCard] = useState<any[]>([]);
+    const [cards, setCards] = useState<Card[]>([]);
+    const [debitCards, setDebitCard] = useState<DebitCardComplete[]>([]);
+    const { secretKey , iv} = useGeneral();
+
 
     const getClientDebitCards = async () => {
         const debitCardResponse = await getDebitCards();
-        setDebitCard( debitCardResponse.cards );
+        
+        if(!debitCardResponse.ok) return;
+        
+        const _cards = debitCardResponse.cards as DebitCardComplete[];        
+        const newCardList = await decodeCardData(_cards, secretKey, iv);
+        setDebitCard( newCardList as DebitCardComplete[] );
     } 
 
-    const createDebitCard = async (debitCardInfo: any, cardBase: any) => {
+    const createDebitCard = async (debitCardInfo: DebitCard, cardBase: Card) => {
         
         const debitCardResponse = await createDC(debitCardInfo);
         
         toast.success(debitCardResponse.msg);
         if(!debitCardResponse.ok) return;
 
+        console.log("debitCardResponse ==> ",debitCardResponse.card);
+        
+        const cardDecoded = decodeOneCard<DebitCardComplete>(debitCardResponse.card, secretKey, iv);
+        console.log(cardDecoded);
+        
         const newDebitCard = {
-            ...debitCardResponse.card,
+            ...cardDecoded,
             card: cardBase
         }
         setDebitCard( prevCards => [...prevCards, newDebitCard] )
     }
 
-    const updatingDebitCard = async (debitCardInfo: any, cardId: number) => {
+    const updatingDebitCard = async (debitCardInfo: DebitCard, cardId: number) => {
         const debitCardResponse = await updateDc( debitCardInfo, cardId )
         
         toast.success(debitCardResponse.msg);
         if(!debitCardResponse.ok) return;
-        
+
+        const cardDecoded = decodeOneCard<DebitCardComplete>(debitCardResponse.card, secretKey, iv);
+
         setDebitCard( prevCard => 
             prevCard.map(card => 
-                card.id === cardId? debitCardResponse.card : card ));
+                card.id === cardId? cardDecoded : card ));
     }
     
 
@@ -79,6 +97,8 @@ export const DebitCardProvider = ({children}: React.PropsWithChildren) => {
             )
         )
     }
+
+
 
     const getCardList = async () => {
         const cardResponse = await getCards();
