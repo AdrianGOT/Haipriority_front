@@ -8,15 +8,10 @@ const SideNav = () => {
     const { logout } = useGeneral();
     const navigate = useNavigate();
     const location = useLocation();
-    const { menuList, setMenuList } = useMainInfo(location.pathname);
+    const currentPath = location.pathname;
+    const { menuList } = useMainInfo(currentPath);
     
     const handleListItemClick = ( url: string ) => {
-        const newMenuItems = menuList.map(item => {
-            item.selected = url === item.path  
-            return item;
-        })
-
-        setMenuList(newMenuItems);
         navigate(`/${url}`);
     };
 

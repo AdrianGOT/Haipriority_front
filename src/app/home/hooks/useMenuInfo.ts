@@ -6,18 +6,28 @@ export const useMainInfo = (path: string) => {
     const [ menuList, setMenuList ] = useState<ItemList[]>([]);
     
     useEffect(() => {
+        
         if(menuList.length > 0) return;
 
         const getMenuInfo = async() => {
             const data = await getMainInfo();
-            const dataMapper = data.menuList.map(item => {
-                item.selected = path.includes(item.path);  
+            setMenuList(data.menuList);
+        }
+
+        getMenuInfo();
+    
+    }, [path])
+
+    useEffect(()=>{
+        if( path === "/" ) return;
+        
+        setMenuList(prevList => (
+            prevList.map(item => {      
+                item.selected = path.includes(item.path); 
                 return item;
             })
-            setMenuList(dataMapper);
-        }
-        getMenuInfo()
-    }, [path]) 
+        ))
+    }, [path])
 
     return {
         menuList,
