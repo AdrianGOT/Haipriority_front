@@ -7,6 +7,7 @@ import { useState } from "react";
 import { CreatingCard, CreditCardInit } from "../interfaces/creditCard";
 import { useCreditCard } from "../hooks/useCreditCard";
 import { getPriceFormatted } from "../../../../helpers/transforCardInfo";
+import { CardOptions } from "../../../components/CardList";
 
 
 interface Prop{
@@ -15,36 +16,35 @@ interface Prop{
 
 const IndividualCard = ({info}: Prop) => {
     const [open, setOpen] = useState<boolean>(false);
-    const { createCreditCard } = useCreditCard();
 
+    const { createCreditCard } = useCreditCard();
 
     const priceFormated = getPriceFormatted(info.amountAllowed);
 
-      const handleClick = ()=>{
-        setOpen(!open)
-      }
+    const handleClick = ()=>{
 
-      const handleCloseDialog = async (value:CreatingCard) => {
-        if(value) {
-            
-            const creditCardToCreate: CreditCardInit = {
-                cardId: info.id,
-                cvc: Number(value.cvc),
-                cardName: value.cardName,
-                courtDate: Number(value.courtDate),
-                paymentDate: Number(value.paymentDate),
-                expirationDate: value.expirationDate,
-                current_amount: 0
+    setOpen(!open)
+    }
 
-            }
-            
-            await createCreditCard(creditCardToCreate, info);
+    const handleCloseDialog = async (value:CreatingCard) => {
+    if(value) {
+        
+        const creditCardToCreate: CreditCardInit = {
+            cardId: info.id,
+            cvc: Number(value.cvc),
+            cardName: value.cardName,
+            courtDate: Number(value.courtDate),
+            paymentDate: Number(value.paymentDate),
+            expirationDate: value.expirationDate,
+            current_amount: 0
+
         }
+        
+        await createCreditCard(creditCardToCreate, info);
+    }
 
-        setOpen(!open);
-      }
-
-
+    setOpen(!open);
+    }
      
     return (
         <>
@@ -72,11 +72,13 @@ const IndividualCard = ({info}: Prop) => {
             </Card>
         </Tooltip>
 
+
         <CreationCardDialog onClose={handleCloseDialog} open={open}/>
         </>
     )
 }
 
-export default function getIndividualCard( data: CardInit ){
-    return <IndividualCard info={data} key={`${data.id}${data.type}${data.franchise}`} />
+export default function getIndividualCard( data: CardOptions ){
+    const newCard = data as CardInit;
+    return <IndividualCard info={newCard} key={`${newCard.id}${newCard.type}${newCard.franchise}`} />
 }

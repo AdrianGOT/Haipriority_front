@@ -8,6 +8,7 @@ export const useLoan = () =>  {
         updateLoan,
         deleteLoan,
         getClientLoans,
+        createInitLoans,
     } = useContext(LoanContext);
 
     return {
@@ -16,5 +17,6 @@ export const useLoan = () =>  {
         updateLoan,
         deleteLoan,
         getClientLoans,
+        createInitLoans,
     }
 }

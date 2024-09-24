@@ -4,11 +4,13 @@ import { LoanContext } from "../context/loan"
 export const useInitLoan = () =>  {
     const {
         initLoans,
-        getInitLoans
+        getInitLoans,
+        createInitLoans,
     } = useContext(LoanContext);
 
     return {
         initLoans,
-        getInitLoans
+        getInitLoans,
+        createInitLoans,
     }
 }

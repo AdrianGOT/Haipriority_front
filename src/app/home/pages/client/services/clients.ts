@@ -1,5 +1,4 @@
 import api from "../../../../../lib/customInterceptor";
-import { ClientUpdate } from "../interfaces/client.interfaces";
 
 const urlComplement = "/client";
 
@@ -8,7 +7,7 @@ export const getClients = () => {
 }
 
 export const deleteClient = (clientId: number) => {
-    return api.get(`${urlComplement}/${clientId}`);
+    return api.delete(`${urlComplement}/${clientId}`);
 }
 
 export const toggleState = (clientId: number, stateTo: boolean) => {

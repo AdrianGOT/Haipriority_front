@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { Card } from "../interfaces/card";
+import { Card, CreatCard } from "../interfaces/card";
 import { CreatingCard, CreditCard, CreditCardInit } from "../interfaces/creditCard";
 import { 
     getCreditCards, 
@@ -8,10 +8,12 @@ import {
     createCreditCard as createCC, 
 } from "../services/creditCard";
 import toast from "react-hot-toast";
-import { getCards } from "../services/card";
+import { 
+    getCards,
+    createCard as createC
+ } from "../services/card";
 import { useGeneral } from "../../../../hooks/useGeneral";
 import { decodeCardData, decodeOneCard } from "../../../../helpers/encryptData";
-
 
 
 interface CardsContext {
@@ -22,13 +24,15 @@ interface CardsContext {
   getClientCredictCards  : () => void,
   deleteCC               : (cardId: number) => void;
   updatingCreditCard     : (data: CreatingCard, cardId: number) => void;
+  createCard             : (data: CreatCard) => void
 }
 
 const initialValues: CardsContext = {
     getClientCredictCards : () => {},
+    updatingCreditCard    : () => {},
     createCreditCard      : () => {},
     getCardList           : () => {},
-    updatingCreditCard    : () => {},
+    createCard            : () => {},
     deleteCC              : () => {},
     cards                 : [],
     creditCards           : [],
@@ -118,6 +122,18 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
         setCards( cards.cards );
     }
 
+    const createCard = async (cardInfo: CreatCard) => {
+        const cardResponse = await createC(cardInfo);
+
+        if(!cardResponse.ok) return;
+
+        toast.success(cardResponse.msg);
+
+        setCards( prevCards =>
+            [...prevCards, cardResponse.card] 
+        )
+    }
+
     return (
         <CreditCardContext.Provider value={{
             cards,
@@ -126,6 +142,7 @@ export function CreditcardsProvider({children}: React.PropsWithChildren){
             getClientCredictCards,
             updatingCreditCard,
             getCardList,
+            createCard,
             deleteCC
         }}>
             { children }

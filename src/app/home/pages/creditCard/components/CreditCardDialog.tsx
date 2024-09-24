@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { generateDateToString } from "../../../../helpers/dateHelper";
 import { CreditCard } from "../interfaces/creditCard";
 import { generateCardName } from "../../../../helpers/transformClientInfo";
+import { formValidators } from "../../../../validators/formValidators";
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -37,9 +38,6 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
             setValue("cvc", card.cvc);
             setValue("courtDate", card.courtDate);
             setValue("paymentDate", card.paymentDate);
-
-
-
         })
         
     }, [open])
@@ -58,7 +56,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
     }
 
     
-    const sendData = handleSubmit(_ => {
+    const sendData = handleSubmit(data => {
         const values = watch();         
         onClose(values); 
         reset();
@@ -78,10 +76,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                         <div className="cardName">
                             <TextField   
                                         {...register("cardName",{
-                                            required: {
-                                                value: true, 
-                                                message: "Este valor es requerido"
-                                            }
+                                            required: formValidators.required
                                            
                                         })}
                                         error={errors["cardName"]? true : false}
@@ -101,27 +96,18 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                         </div>
                         <div className="cvc">
                             <TextField   
-                                        {...register("cvc",{
-                                            required: { 
-                                                value: true, 
-                                                message: "Este valor es requerido"
-                                            }, 
-                                            maxLength: {
-                                                value: 3,
-                                                message: "El valor no puede tener más de 3 caracateres"
-                                            },
-                                            minLength: {
-                                                value: 3,
-                                                message: "El valor no puede tener menos de 3 caracateres"
-                                            },
-                                        })}
-                                        error={errors.cvc? true : false}
-                                        label="CVC" 
-                                        variant="outlined" 
-                                        focused
-                                        type="number"
-                                        sx={{ width: "100%" }}
-                                        size="small"/>
+                                    {...register("cvc",{
+                                        required: formValidators.required,
+                                        maxLength: formValidators.maxLength(3),
+                                        minLength: formValidators.minLength(3)
+                                    })}
+                                    error={errors.cvc? true : false}
+                                    label="CVC" 
+                                    variant="outlined" 
+                                    focused
+                                    type="number"
+                                    sx={{ width: "100%" }}
+                                    size="small"/>
                             { 
                                 errors["cvc"] && (
                                     <span className="error-text"> 
@@ -135,10 +121,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                         <div className="expirationDate">
                             <TextField   
                                         {...register("expirationDate",{
-                                            required: { 
-                                                value: true, 
-                                                message: "Este valor es requerido"
-                                            }
+                                            required: formValidators.required
                                         })}
                                         error={errors.expirationDate? true : false}
                                         label="Fecha de expiración" 
@@ -158,10 +141,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                         <div className="courtDate">
                             <TextField   
                                         {...register("courtDate",{
-                                            required: { 
-                                                value: true, 
-                                                message: "Este valor es requerido"
-                                            },
+                                            required: formValidators.required,
                                             validate : (value: number)=> validateRangeDate(value)
                                         })}
                                         error={errors.courtDate? true : false}
@@ -183,10 +163,7 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                         <div className="paymentDate">
                             <TextField   
                                         {...register("paymentDate",{
-                                            required: { 
-                                                value: true, 
-                                                message: "Este valor es requerido",
-                                            },
+                                            required: formValidators.required,
                                             validate : (value: number)=> validateRangeDate(value)
                                         })}
                                         error={errors.paymentDate? true : false}

@@ -8,6 +8,7 @@ import { CreationCardDialog } from "./DebitCardDialog"
 import { useDebitCard } from "../hooks/useDebitCard";
 import { getPriceFormatted } from "../../../../helpers/transforCardInfo";
 import { DebitCard, DebitCardComplete } from "../interfaces/debitCard";
+import { CardOptions } from "../../../components/CardList";
 
 
 interface Prop{
@@ -123,6 +124,7 @@ const IndividualDebitCard = ({info}: Prop) => {
     )
 }
 
-export default function getIndividualDebitCard(data: DebitCardComplete){
-    return <IndividualDebitCard info={data} key={`${data.id}${data.number}${data.clientId}`}/>
+export default function getIndividualDebitCard(data: CardOptions){
+    const newData = data as DebitCardComplete;
+    return <IndividualDebitCard info={newData} key={`${newData.id}${newData.number}${newData.clientId}`}/>
 }

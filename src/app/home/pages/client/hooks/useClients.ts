@@ -32,6 +32,7 @@ export const useClients = () => {
         const clientsResponse = await deleteC(clientId);
 
         if(!clientsResponse.ok) return;
+        toast.success(clientsResponse.msg);
 
         setClients(preVClients => 
             preVClients.filter(client => 
@@ -44,6 +45,8 @@ export const useClients = () => {
         const clientsResponse = await updateC(clientInfo, clientId);
         
         if(!clientsResponse.ok) return;
+        toast.success(clientsResponse.msg);
+
         const clienteUpdated = clientsResponse.client;
 
         setClients(prevClients => 

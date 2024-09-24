@@ -4,12 +4,14 @@ import { CreditCardContext } from "../context/creditCard";
 export const useCards = () => {
     const { 
         cards, 
-        getCardList 
+        getCardList,
+        createCard
     } = useContext(CreditCardContext);
 
 
     return {
         cards,
+        createCard,
         getCardList,
     }
 }

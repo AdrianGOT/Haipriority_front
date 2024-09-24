@@ -6,3 +6,5 @@ export interface Card{
     type: string;
     franchise: Franchise;
 }
+
+export type CreateCard = Omit<Card, "id">

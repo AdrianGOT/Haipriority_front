@@ -14,3 +14,21 @@
     font-size: 1.1rem;
     text-align: center;
 }
+
+.loan-dialog {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: "title title interest"
+                         "amountAllowed amountAllowed amountAllowed";
+}
+
+.loan-dialog .title{
+    grid-area: title;
+}
+
+.loan-dialog .interest{
+    grid-area: interest;
+}
+
+.loan-dialog .amountAllowed{
+    grid-area: amountAllowed;
+}

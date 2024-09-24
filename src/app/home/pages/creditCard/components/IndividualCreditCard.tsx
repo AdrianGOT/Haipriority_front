@@ -8,6 +8,7 @@ import { useState } from "react"
 import { useCreditCard } from "../hooks/useCreditCard"
 import { CreationCardDialog } from "./CreditCardDialog"
 import { getPriceFormatted } from "../../../../helpers/transforCardInfo"
+import { CardOptions } from "../../../components/CardList"
 
 interface Prop{
     info: CreditCard
@@ -133,6 +134,7 @@ const IndividualCreditCard = ({info}: Prop) => {
     )
 }
 
-export default function getIndividualCreditCard(data: CreditCard){
-    return <IndividualCreditCard info={data} key={`${data.id}`}/>
+export default function getIndividualCreditCard(data: CardOptions){
+    const newCard = data as CreditCard;
+    return <IndividualCreditCard info={newCard} key={`${newCard.id}`}/>
 }

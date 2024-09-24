@@ -8,13 +8,16 @@ import {
 
 } from "../services/laon";
 import {
-    getInitLoans as getIloans
+    getInitLoans as getIloans,
+    createInitLoan as createILoan
 } from "../services/loanInit"
-import { InitLoan, LoanComplete, LoanToCreate } from "../interfaces/loan";
+import { LoanComplete, LoanToCreate } from "../interfaces/loan";
+import { CreateLoanInit, InitLoan } from "../interfaces/initLoans";
 
 interface LoanContext {
     loans          : LoanComplete[];
     initLoans      : InitLoan[];
+    createInitLoans: (loainInfo: CreateLoanInit) => void;
     getClientLoans : () => void;
     getInitLoans   : () => void;
     createLoan     : (loanInfo: LoanToCreate, initLoan: InitLoan) => void;
@@ -31,6 +34,7 @@ const initialValues: LoanContext = {
     createLoan     : () => {},
     updateLoan     : () => {},
     deleteLoan     : () => {},
+    createInitLoans: () => {},
 
 }
 
@@ -45,12 +49,6 @@ export const LoanProvider = ({children}: React.PropsWithChildren) => {
         if(!loanResponse.ok) return;
         
         setLoans(loanResponse.loans)
-    }
-
-    const getInitLoans = async () => {
-        const loanResponse = await getIloans();
-        if(!loanResponse.ok) return;
-        setInitLoans(loanResponse.loans)
     }
 
     const createLoan = async (loanInfo: LoanToCreate, initLoan: InitLoan) => {
@@ -96,6 +94,26 @@ export const LoanProvider = ({children}: React.PropsWithChildren) => {
         )
 
     }
+    
+    // ======================
+
+    const getInitLoans = async () => {
+        const loanResponse = await getIloans();
+        if(!loanResponse.ok) return;
+        setInitLoans(loanResponse.loans)
+    }
+
+    const createInitLoans = async (loainInfo: CreateLoanInit) => {
+        const loanResponse = await createILoan(loainInfo);
+
+        if(!loanResponse.ok) return;
+
+        toast.success(loanResponse.msg);
+
+        setInitLoans(prevLoans => 
+            [...prevLoans, loanResponse.loan]
+        )
+    }
 
 
     return (
@@ -107,6 +125,7 @@ export const LoanProvider = ({children}: React.PropsWithChildren) => {
             deleteLoan,
             getInitLoans,
             getClientLoans,
+            createInitLoans,
         }}>
             {children}
         </LoanContext.Provider>

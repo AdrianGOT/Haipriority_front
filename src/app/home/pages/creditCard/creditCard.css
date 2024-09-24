@@ -1,0 +1,18 @@
+.card-dialog{
+    grid-template-areas: "cardType franchise" 
+                         "amountAllowed amountAllowed ";
+}
+
+.card-dialog .card-type{
+    grid-area: cardType;
+}
+
+.card-dialog .franchise{
+    grid-area: franchise;
+    display: flex;
+    align-items: center;
+}
+
+.card-dialog .amountAllowed{
+    grid-area: amountAllowed;
+}

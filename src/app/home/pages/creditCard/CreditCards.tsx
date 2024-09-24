@@ -10,14 +10,20 @@ import { useCards } from "./hooks/useCards";
 import { useGeneral } from "../../../hooks/useGeneral";
 import { ROLES } from "../client/interfaces/client.interfaces";
 
+import { CardDialog } from "./components/CardDialog";
+import { CreatCard } from "./interfaces/card";
+
 import "./creditCard.css";
+
 
 export type TabTypes = "creditCard" | "card";
 
 const CreditCards = () => {
-    const { creditCards, getClientCredictCards } = useCreditCard();
-    const { cards, getCardList } = useCards();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("creditCard");
+    const [openDialog, setOpenDialog] = useState(false)
+
+    const { creditCards, getClientCredictCards } = useCreditCard();
+    const { cards, getCardList, createCard } = useCards();
     const { client } = useGeneral();    
     
     useEffect(()=> {
@@ -40,13 +46,26 @@ const CreditCards = () => {
         client.roles.some(role => ROLES.admin === role)
     , []);
 
-    const handleChange = (event: React.SyntheticEvent, page: TabTypes) => {
+    const handleChange = (_: React.SyntheticEvent, page: TabTypes) => {
         setPageSelected(page);
     }
     
     const tabPadding = {
         card: pageSelected === "card"? "24px": "0px",
         creditCard : pageSelected === "creditCard"? "24px": "0px"
+    }
+
+    const openDialogToAddCard = () => {
+        setOpenDialog(true);
+    }
+    
+    const closeDialogToAddCard = (data: CreatCard | null) => {
+        console.log(data);
+     
+        if(data) createCard(data)
+        
+        setOpenDialog(false);
+        
     }
 
     return (
@@ -68,7 +87,11 @@ const CreditCards = () => {
                         fComponent={getIndividualCreditCard} />
 
                 </TabPanel>
-                <TabPanel value="card" sx={{  padding: tabPadding.card,  }} className="tab-container">
+                <TabPanel value="card" sx={{  
+                    padding: tabPadding.card, 
+                    display:'flex', 
+                    alignItems: "center",
+                    flexDirection: 'column' }} className="tab-container">
                     <Box sx={{ width: '100%', textAlign: 'center', fontSize: '1.2rem', marginBottom: '2rem' }}>
                         Tarjetas disponibles para ser solicitadas 
                     </Box>
@@ -79,18 +102,23 @@ const CreditCards = () => {
 
                         {
                             showAddCardButton && (
-                                <Button 
-                                    variant="outlined" 
-                                    size="medium" 
-                                    startIcon={<AddIcon />}
-                                    sx={{
-                                        width: '80%', 
-                                        textAlign: 'center',
-                                        marginTop: '2rem'
-                                        
-                                    }}>
-                                        Agregar tarjeta modelo
-                                </Button>
+                                <>
+                                    <Button 
+                                        variant="outlined" 
+                                        size="medium"
+                                        onClick={openDialogToAddCard}
+                                        startIcon={<AddIcon />}
+                                        sx={{
+                                            width: '80%',
+                                            maxWidth: '800px', 
+                                            textAlign: 'center',
+                                            marginTop: '2rem'
+                                        }}>
+                                            Agregar tarjeta modelo
+                                    </Button>
+
+                                    <CardDialog open={openDialog} onClose={closeDialogToAddCard} />
+                                </>
                             )
                         }
 

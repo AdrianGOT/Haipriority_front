@@ -9,6 +9,7 @@ import { useLoan } from "../hooks/useLoan"
 import { LoanComplete, LoanToCreate } from "../interfaces/loan";
 import { useGeneral } from "../../../../hooks/useGeneral";
 import { ROLES } from "../../client/interfaces/client.interfaces";
+import { CardOptions } from "../../../components/CardList";
 
 interface Prop{
     info: LoanComplete
@@ -124,6 +125,7 @@ const IndividualLoan = ({info}: Prop) => {
     )
 }
 
-export default function getIndividualLoan(data: LoanComplete){
-    return <IndividualLoan info={data} key={`${data.id}${data.createdAt}`}/>
+export default function getIndividualLoan(data: Partial<CardOptions>){
+    const newLoan = data as LoanComplete;
+    return <IndividualLoan info={newLoan} key={`${newLoan.id}${newLoan.createdAt}`}/>
 }

@@ -11,14 +11,17 @@ import AddIcon from '@mui/icons-material/Add';
 import "./debitCard.css";
 import getIndividualDebitCard from "./components/IndividualDebitCard";
 import getIndividualCard from "./components/IndividualCard";
+import { CardDialog } from "./components/CardDialog";
+import { CreateCard } from "./interfaces/card";
 
 export type TabTypes = "debitCard" | "card";
 
 const DebitCard = () => {
     
-    const { debitCards, getClientDebitCards } = useDebitCard();
-    const { cards, getCardList } = useCards();
     const [ pageSelected, setPageSelected ] = useState<TabTypes>("debitCard");
+    const [openDialog, setOpenDialog] = useState(false);
+    const { debitCards, getClientDebitCards } = useDebitCard();
+    const { cards, getCardList, createCard } = useCards();
     const { client } = useGeneral();
 
     useEffect(()=> {
@@ -36,7 +39,7 @@ const DebitCard = () => {
 
     const showAddCardButton = client.roles.some(role => ROLES.admin === role);
 
-    const handleChange = (_: any, page: TabTypes) => {
+    const handleChange = (_: React.SyntheticEvent, page: TabTypes) => {
         setPageSelected(page);
     }
 
@@ -44,6 +47,15 @@ const DebitCard = () => {
         card: pageSelected === "card"? "24px": "0px",
         creditCard : pageSelected === "debitCard"? "24px": "0px"
     }
+
+    const closeDialogToAddCard = (data: CreateCard | null) => {
+
+        if(data) createCard(data);
+
+        setOpenDialog(false);
+    }
+
+
 
     return (
         <TabContext value={pageSelected}>
@@ -65,7 +77,13 @@ const DebitCard = () => {
 
         </TabPanel>
 
-        <TabPanel value="card" sx={{  padding: tabPadding.card,  }} className="tab-container">
+        <TabPanel value="card" sx={{  
+                    padding: tabPadding.card, 
+                    display:'flex', 
+                    alignItems: "center",
+                    flexDirection: 'column' }}
+                className="tab-container">
+
             <Box sx={{ width: '100%', textAlign: 'center', fontSize: '1.2rem', marginBottom: '2rem' }}>
                 Tarjetas disponibles para ser solicitadas 
             </Box>
@@ -76,18 +94,23 @@ const DebitCard = () => {
 
                 {
                     showAddCardButton && (
-                        <Button 
-                            variant="outlined" 
-                            size="medium" 
-                            startIcon={<AddIcon />}
-                            sx={{
-                                width: '80%', 
-                                textAlign: 'center',
-                                marginTop: '2rem'
-                                
-                            }}>
-                                Agregar tarjeta modelo
-                        </Button>
+                        <>
+                            <Button 
+                                variant="outlined" 
+                                size="medium" 
+                                startIcon={<AddIcon />}
+                                onClick={() => setOpenDialog(true)}
+                                sx={{
+                                    width: '80%', 
+                                    textAlign: 'center',
+                                    marginTop: '2rem'
+                                    
+                                }}>
+                                    Agregar tarjeta modelo
+                            </Button>
+
+                            <CardDialog open={openDialog} onClose={closeDialogToAddCard} />
+                        </>
                     )
                 }
 

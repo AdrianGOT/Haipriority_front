@@ -6,6 +6,7 @@ import { CreationCardDialog } from "./DebitCardDialog";
 import { useState } from "react";
 import { DebitCard } from "../interfaces/debitCard";
 import { useDebitCard } from "../hooks/useDebitCard";
+import { CardOptions } from "../../../components/CardList";
 
 
 interface Prop{
@@ -62,6 +63,7 @@ const IndividualCard = ({info}: Prop) => {
     )
 }
 
-export default function getIndividualCard( data: CardInit ){
-    return <IndividualCard info={data} key={`${data.id}${data.type}${data.franchise}`} />
+export default function getIndividualCard( data: CardOptions ){
+    const newData = data as CardInit;
+    return <IndividualCard info={newData} key={`${newData.id}${newData.type}${newData.franchise}`} />
 }

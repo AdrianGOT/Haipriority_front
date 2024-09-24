@@ -9,6 +9,24 @@ export const formValidators = {
     },
     "confirm_password": (value: string, otherValue?: string) => {
         return value === otherValue || "No coinciden las contraseñas"        
-    }, 
+    },
+    "maxLength": (value: number) => {
+        return {
+            value,
+            message: `El valor no puede tener más de ${value} caracateres`
+        }
+    },
+    "minLength": (value: number) => {
+        return {
+            value,
+            message: `El valor no puede tener menos de ${value} caracateres`
+        }
+    },
+    "range": (currValue: number, minValue: number, maxValue: number) => {
+        const isInRange = minValue <= currValue && maxValue >= currValue;
+
+        return  isInRange || `El valor debe estar entre los valores ${minValue} y ${maxValue}`
+
+    }
 
 }

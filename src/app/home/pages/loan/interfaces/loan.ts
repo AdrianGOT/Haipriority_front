@@ -1,3 +1,5 @@
+import { InitLoan } from "./initLoans";
+
 type ClientName = {
     name: string
 }
@@ -19,9 +21,3 @@ export interface LoanToCreate {
     loanId         :  number;
 }
 
-export interface InitLoan {
-    id           : number;
-    title        : string;
-    interest     : number;
-    amountAllowed : number;
-}

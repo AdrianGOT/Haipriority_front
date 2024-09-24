@@ -6,13 +6,15 @@ import {
     deleteDebitCard as deleteDC
 } from "../services/debitCard";
 import {
-    getCards
+    getCards,
+    createCard as createC
 } from "../services/card";
 import toast from "react-hot-toast";
-import { Card } from "../interfaces/card";
+import { Card, CreateCard } from "../interfaces/card";
 import { DebitCard, DebitCardComplete } from "../interfaces/debitCard";
 import { useGeneral } from "../../../../hooks/useGeneral";
 import { decodeCardData, decodeOneCard } from "../../../../helpers/encryptData";
+
 
 interface DCardContext {
     cards               : Card[];
@@ -22,6 +24,7 @@ interface DCardContext {
     createDebitCard     : (debitCardInfo: DebitCard, cardBase: Card) => void;
     deleteDebitCard     : (cardId: number) => void;
     getCardList         : () => void;
+    createCard          : (cardInfo: CreateCard) => void
 }
 
 const initialValues: DCardContext = {
@@ -31,7 +34,8 @@ const initialValues: DCardContext = {
     updatingDebitCard: function (): void {},
     createDebitCard: function (): void {},
     deleteDebitCard: function (): void {},
-    getCardList: function (): void {}
+    getCardList: function (): void {},
+    createCard : function (): void {},
 }
 
 export const DebitCardContext = createContext(initialValues);
@@ -98,7 +102,7 @@ export const DebitCardProvider = ({children}: React.PropsWithChildren) => {
         )
     }
 
-
+    // ===========================
 
     const getCardList = async () => {
         const cardResponse = await getCards();
@@ -106,10 +110,19 @@ export const DebitCardProvider = ({children}: React.PropsWithChildren) => {
         if(!cardResponse.ok) return;
 
         setCards(cardResponse.cards);
-
     }
 
-
+    const createCard = async(cardInfo: CreateCard) => {
+        const cardResponse = await createC(cardInfo);
+        
+        if(!cardResponse.ok) return;
+    
+        toast.success(cardResponse.msg);
+        
+        setCards(prevCards => 
+            [...prevCards, cardResponse.card]
+        )
+    }
 
     return (
         <DebitCardContext.Provider value={{
@@ -118,6 +131,7 @@ export const DebitCardProvider = ({children}: React.PropsWithChildren) => {
             createDebitCard,
             deleteDebitCard,
             getCardList,
+            createCard,
             debitCards,
             cards,
         }}>

@@ -37,6 +37,7 @@
 
 .cardList-wrapper{
     display: grid;
+    width: 90%;
     justify-items: var(--aling, center); 
     
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
