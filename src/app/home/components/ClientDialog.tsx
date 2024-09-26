@@ -1,8 +1,8 @@
-import { Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { useGeneral } from "../../hooks/useGeneral";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { Client, InitClient, ROLES } from "../pages/client/interfaces/client.interfaces";
+import { useEffect } from "react";
+import { InitClient, ROLES } from "../pages/client/interfaces/client.interfaces";
 import toast from "react-hot-toast";
 import InfoIcon from '@mui/icons-material/Info';
 import { formValidators } from "../../validators/formValidators";
@@ -94,8 +94,6 @@ export const ClientDialog = (props: SimpleDialogProps) => {
 
     }
 
-    const RoleList = [ROLES.admin, ROLES.user];
-
     return (
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle textAlign={"center"}> Editar información del cliente </DialogTitle>
@@ -174,7 +172,11 @@ export const ClientDialog = (props: SimpleDialogProps) => {
                     {!createMode && (
                         <>
                             <hr />
-                            <h4> Actualizar contraseña </h4>
+                            <h4 style={{
+                                width: '100%',
+                                textAlign: 'center',
+                                margin: '1rem 0px'
+                            }}> Actualizar contraseña </h4>
                         </>
                     )}
 

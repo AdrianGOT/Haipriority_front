@@ -32,12 +32,12 @@ export const ToolBar = () => {
         setOpeneditDialog(false);
         handleClose();
 
+        if(!values) return;
+
         if("password" in values){
             const passwordEncrypted = await encryptDataV2(values.password!, publicKey);
             values.password = passwordEncrypted;  
         }
-
-        if(!values) return;
 
         await updateClient(values)
     }
@@ -52,7 +52,8 @@ export const ToolBar = () => {
             className="box-content" 
             sx={{
             display: 'flex', 
-            justifyContent: 'space-between', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
             padding: '0.8rem  2rem',  
             backgroundColor: 'red'}}>
             <h2>Bank App</h2>
