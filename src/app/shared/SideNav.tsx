@@ -51,7 +51,7 @@ const SideNav = () => {
             </List>
 
             <Button
-                sx={{width: '80%', marginBottom:'.5rem'}}
+                sx={{width: '80%', marginBottom:'1rem'}}
                 component="label"
                 role={undefined}
                 onClick={handleLogout}

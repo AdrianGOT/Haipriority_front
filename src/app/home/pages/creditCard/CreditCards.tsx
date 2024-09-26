@@ -86,7 +86,12 @@ const CreditCards = () => {
                     </TabList>
                 </Box>
                 
-                <TabPanel value="creditCard" className="tab-container" sx={{ padding: tabPadding.creditCard }}>
+                <TabPanel 
+                    value="creditCard" 
+                    className="tab-container" 
+                    sx={{ 
+                        padding: tabPadding.creditCard 
+                    }}>
                     
                     {isCardListEmpty && (
                         <EmptyText text={emptyMessageText} />

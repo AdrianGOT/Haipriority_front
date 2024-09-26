@@ -19,3 +19,5 @@ export interface CreatingCard {
     current_amount : number,
 
 }
+
+export type CreatingCardDialog = Omit<CreatingCard, "current_amount">

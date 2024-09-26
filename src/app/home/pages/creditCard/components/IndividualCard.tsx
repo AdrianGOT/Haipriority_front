@@ -4,7 +4,7 @@ import { VisaIcon } from "../../../components/icons/VisaIcon";
 import { MasterCardIcon } from "../../../components/icons/MasterCardIcon";
 import { CreationCardDialog } from "./CreditCardDialog";
 import { useState } from "react";
-import { CreatingCard, CreditCardInit } from "../interfaces/creditCard";
+import { CreatingCardDialog, CreditCardInit } from "../interfaces/creditCard";
 import { useCreditCard } from "../hooks/useCreditCard";
 import { getPriceFormatted } from "../../../../helpers/transforCardInfo";
 import { CardOptions } from "../../../components/CardList";
@@ -26,7 +26,7 @@ const IndividualCard = ({info}: Prop) => {
     setOpen(!open)
     }
 
-    const handleCloseDialog = async (value:CreatingCard) => {
+    const handleCloseDialog = async (value:CreatingCardDialog | null) => {
     if(value) {
         
         const creditCardToCreate: CreditCardInit = {

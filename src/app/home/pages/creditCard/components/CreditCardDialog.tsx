@@ -3,14 +3,14 @@ import { useForm } from "react-hook-form";
 import { useGeneral } from "../../../../hooks/useGeneral";
 import { useEffect } from "react";
 import { generateDateToString } from "../../../../helpers/dateHelper";
-import { CreditCard } from "../interfaces/creditCard";
+import { CreatingCardDialog, CreditCard } from "../interfaces/creditCard";
 import { generateCardName } from "../../../../helpers/transformClientInfo";
 import { formValidators } from "../../../../validators/formValidators";
 
 export interface SimpleDialogProps {
     open: boolean;
     card?: CreditCard;
-    onClose: (value: any) => void;
+    onClose: (value: CreatingCardDialog | null) => void;
   }
 
 
@@ -56,8 +56,8 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
     }
 
     
-    const sendData = handleSubmit(data => {
-        const values = watch();         
+    const sendData = handleSubmit(() => {
+        const values = watch() as CreatingCardDialog;                 
         onClose(values); 
         reset();
     }) 
@@ -125,8 +125,10 @@ export const CreationCardDialog = (props: SimpleDialogProps) => {
                                         })}
                                         error={errors.expirationDate? true : false}
                                         label="Fecha de expiración" 
-                                        variant="outlined" 
+                                        variant="outlined"
+                                        type="date"
                                         focused
+
                                         sx={{ width: "100%" }}
                                         size="small"/>
                             { 
