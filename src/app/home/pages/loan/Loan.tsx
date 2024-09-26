@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { CardList } from "../../components/CardList";
 import { useLoan } from "./hooks/useLoan";
 import { useInitLoan } from "./hooks/useInitLoan";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGeneral } from "../../../hooks/useGeneral";
 import { ROLES } from "../client/interfaces/client.interfaces";
 import getIndividualLoan from "./components/IndividualLoan";
@@ -15,6 +15,7 @@ import { InitLoanDialog } from "./components/InitLoanDialog";
 import { CreateLoanInit } from "./interfaces/initLoans";
 
 import "./loans.css"
+import { EmptyText } from "../../components/EmptyText";
 
 export type TabTypes = "loans" | "init_loans";
 
@@ -61,6 +62,12 @@ const Loan = () => {
     }
     
 
+    const isLoansEmpty = loans.length === 0;
+    const emptyMessageText = useMemo(()=> {
+        const isAdmin = client.roles.includes(ROLES.admin);
+        return isAdmin? "NO HAY PRESTAMOS SOLICITADOS" : "NO TIENE PRESTAMOS APROBADOS";
+    }, [loans])
+    
 
     
     return (
@@ -79,10 +86,17 @@ const Loan = () => {
                     value="loans" 
                     className="tab-container" 
                     sx={{ padding: tabPadding.creditCard }}>
+
+                    {isLoansEmpty && (
+                        <EmptyText text={emptyMessageText} />
+                    )}
+
+                    {!isLoansEmpty && (
+                        <CardList 
+                            cards={loans || []} 
+                            fComponent={getIndividualLoan} />
+                    )}
                     
-                    <CardList 
-                        cards={loans || []} 
-                        fComponent={getIndividualLoan} />
 
                 </TabPanel>
                 <TabPanel 

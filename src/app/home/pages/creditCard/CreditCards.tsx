@@ -14,6 +14,7 @@ import { CardDialog } from "./components/CardDialog";
 import { CreatCard } from "./interfaces/card";
 
 import "./creditCard.css";
+import { EmptyText } from "../../components/EmptyText";
 
 
 export type TabTypes = "creditCard" | "card";
@@ -65,8 +66,13 @@ const CreditCards = () => {
         if(data) createCard(data)
         
         setOpenDialog(false);
-        
     }
+
+    const isCardListEmpty = creditCards.length === 0;
+    const emptyMessageText = useMemo(()=> {
+        const isAdmin = client.roles.includes(ROLES.admin);
+        return isAdmin? "NO HAY TARJETAS CREADAS" : "NO TIENE TARJETAS ASIGNADAS";
+    }, [creditCards])
 
     return (
             <TabContext value={pageSelected}>
@@ -82,9 +88,15 @@ const CreditCards = () => {
                 
                 <TabPanel value="creditCard" className="tab-container" sx={{ padding: tabPadding.creditCard }}>
                     
-                    <CardList 
-                        cards={creditCards || []} 
-                        fComponent={getIndividualCreditCard} />
+                    {isCardListEmpty && (
+                        <EmptyText text={emptyMessageText} />
+                    )}
+
+                    {!isCardListEmpty && (
+                        <CardList 
+                            cards={creditCards || []} 
+                            fComponent={getIndividualCreditCard} />
+                    )}
 
                 </TabPanel>
                 <TabPanel value="card" sx={{  

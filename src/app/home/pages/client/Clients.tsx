@@ -17,6 +17,7 @@ import { useKey } from '../../../auth/hooks/useKey';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useGeneral } from '../../../hooks/useGeneral';
+import { EmptyText } from '../../components/EmptyText';
 
 const Clients = () => {
     const { 
@@ -30,9 +31,12 @@ const Clients = () => {
     const { publicKey } = useKey();
     const [openEditDialog, setOpenEditDialog] = useState(false);
 
+    const clientListEmpty = clients.length === 0;
+
     const clientList = useMemo( () => {
       return clients.filter(c => client.id != c.id)
     }, [clients]);
+
 
     const handleDeleteClient = (clientId: number) => {
       deleteClient(clientId);
@@ -59,73 +63,68 @@ const Clients = () => {
       toggleState(clientId, stateTo);
     }
 
-
-    // const clientDefaultValues: InitClient = {
-    //   id: 0,
-    //   name: '',
-    //   email: '',
-    //   roles: [],
-    //   phoneNumber: ''
-    // }
-
     return(
      <>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple">
-          
-            <TableHead>
-              <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell align="right">Correo electronico</TableCell>
-                <TableCell align="right">Número de telefono</TableCell>
-                <TableCell align="right">Fecha de creación</TableCell>
-                <TableCell align="right">Estado</TableCell>
-                <TableCell align="center">Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {clientList.map((clientRow) => (
-                <TableRow
-                  key={clientRow.email}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } , height: "100%"}}
-                >
-                  <TableCell component="th" scope="row">
-                    {clientRow.name}
-                  </TableCell>
-                  <TableCell align="right">{clientRow.email}</TableCell>
-                  <TableCell align="right">{clientRow.phoneNumber}</TableCell>
-                  <TableCell align="right">{generateDateToString(new Date(clientRow.createdAt!))}</TableCell>
-                  <TableCell align="right" sx={{width: "103px"}}>{
-                    clientRow.state? 
-                      <Chip sx={{width: "100%"}} label="Activo" color="success"  onClick={() => toggleclientState(clientRow.id, !clientRow.state)}/>
-                      : <Chip sx={{width: "100%"}} label="Inactivo" color="warning" onClick={() => toggleclientState(clientRow.id, !clientRow.state)}/>
+        {!clientListEmpty && (
+                  <TableContainer component={Paper}>
+                  <Table aria-label="simple">
                   
-                  }</TableCell>
-                  <TableCell sx={{display: "flex"}} >
-                    <IconButton sx={{color: "#ffa000"}}
-                      aria-label="editar"
-                      onClick={handleEditClient}>
-                        <EditIcon/>
-                    </IconButton>
-                    <IconButton
-                      sx={{color: "#ff5722"}} 
-                      aria-label="delete"
-                      onClick={() => handleDeleteClient(clientRow.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-
-
-                    <ClientDialog open={openEditDialog} onClose={handleCloseEditDialog} clientSelected={clientRow}/>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nombre</TableCell>
+                        <TableCell align="right">Correo electronico</TableCell>
+                        <TableCell align="right">Número de telefono</TableCell>
+                        <TableCell align="right">Fecha de creación</TableCell>
+                        <TableCell align="right">Estado</TableCell>
+                        <TableCell align="center">Acciones</TableCell>
+                      </TableRow>
+                    </TableHead>
         
-          </Table>
-      </TableContainer>
-      {/* <ClientDialog open={openCreateDialog} onClose={handleCloseCreateDialog} clientSelected={clientDefaultValues}/> */}
+                    <TableBody>
+                      {clientList.map((clientRow) => (
+                        <TableRow
+                          key={clientRow.email}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } , height: "100%"}}
+                        >
+                          <TableCell component="th" scope="row">
+                            {clientRow.name}
+                          </TableCell>
+                          <TableCell align="right">{clientRow.email}</TableCell>
+                          <TableCell align="right">{clientRow.phoneNumber}</TableCell>
+                          <TableCell align="right">{generateDateToString(new Date(clientRow.createdAt!))}</TableCell>
+                          <TableCell align="right" sx={{width: "103px"}}>{
+                            clientRow.state? 
+                              <Chip sx={{width: "100%"}} label="Activo" color="success"  onClick={() => toggleclientState(clientRow.id, !clientRow.state)}/>
+                              : <Chip sx={{width: "100%"}} label="Inactivo" color="warning" onClick={() => toggleclientState(clientRow.id, !clientRow.state)}/>
+                          
+                          }</TableCell>
+                          <TableCell sx={{display: "flex"}} >
+                            <IconButton sx={{color: "#ffa000"}}
+                              aria-label="editar"
+                              onClick={handleEditClient}>
+                                <EditIcon/>
+                            </IconButton>
+                            <IconButton
+                              sx={{color: "#ff5722"}} 
+                              aria-label="delete"
+                              onClick={() => handleDeleteClient(clientRow.id)}>
+                              <DeleteIcon />
+                            </IconButton>
+        
+        
+                            <ClientDialog open={openEditDialog} onClose={handleCloseEditDialog} clientSelected={clientRow}/>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                
+                  </Table>
+              </TableContainer>
+        )}
 
+        {clientListEmpty && (
+          <EmptyText text={"NO HAY CLIENTES REGISTRADOS APARTE DE USTED"} />
+        ) }
      </>
     )
 }

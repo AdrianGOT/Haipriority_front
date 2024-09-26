@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCards } from "./hooks/useCard";
 import { useDebitCard } from "./hooks/useDebitCard";
 import { useGeneral } from "../../../hooks/useGeneral";
@@ -13,6 +13,7 @@ import getIndividualDebitCard from "./components/IndividualDebitCard";
 import getIndividualCard from "./components/IndividualCard";
 import { CardDialog } from "./components/CardDialog";
 import { CreateCard } from "./interfaces/card";
+import { EmptyText } from "../../components/EmptyText";
 
 export type TabTypes = "debitCard" | "card";
 
@@ -56,6 +57,11 @@ const DebitCard = () => {
     }
 
 
+    const isCardListEmpty = debitCards.length === 0;
+    const emptyMessageText = useMemo(()=> {
+        const isAdmin = client.roles.includes(ROLES.admin);
+        return isAdmin? "NO HAY TARJETAS CREADAS" : "NO TIENE TARJETAS ASIGNADAS";
+    }, [debitCards])
 
     return (
         <TabContext value={pageSelected}>
@@ -71,9 +77,15 @@ const DebitCard = () => {
         
         <TabPanel value="debitCard" className="tab-container" sx={{ padding: tabPadding.creditCard }}>
             
-            <CardList 
-                cards={debitCards || []} 
-                fComponent={getIndividualDebitCard} />
+            {isCardListEmpty && (
+                <EmptyText text={emptyMessageText} />
+            )}
+
+            {!isCardListEmpty && (
+                <CardList
+                    cards={debitCards || []} 
+                    fComponent={getIndividualDebitCard} />
+            )}
 
         </TabPanel>
 
