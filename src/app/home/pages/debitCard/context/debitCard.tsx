@@ -62,11 +62,8 @@ export const DebitCardProvider = ({children}: React.PropsWithChildren) => {
         
         toast.success(debitCardResponse.msg);
         if(!debitCardResponse.ok) return;
-
-        console.log("debitCardResponse ==> ",debitCardResponse.card);
         
         const cardDecoded = decodeOneCard<DebitCardComplete>(debitCardResponse.card, secretKey, iv);
-        console.log(cardDecoded);
         
         const newDebitCard = {
             ...cardDecoded,

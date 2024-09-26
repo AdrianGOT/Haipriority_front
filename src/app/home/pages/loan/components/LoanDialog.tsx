@@ -22,8 +22,6 @@ export const LoanDialog = (props: SimpleDialogProps) => {
     } = useForm();
     
     const isLoanInit = !!loan.title;
-    console.log(isLoanInit);
-    
 
     useEffect(()=> {
         if(!open) return;

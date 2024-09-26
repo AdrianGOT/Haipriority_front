@@ -14,9 +14,7 @@ const Login = () => {
     const {register, handleSubmit, formState: {errors} } = useForm();
     const [data, setData] = useState<ClientLogin | null>(null);
     const { loading, finishMsg } = useLoginFetch(data);
-    const { publicKey } = useKey();
-    console.log("@");
-    
+    const { publicKey } = useKey();    
 
     useEffect(()=> {
         if(!finishMsg) return;
